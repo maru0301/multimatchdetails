@@ -80,7 +80,7 @@ function CreateURLForm()
 
 	var tag = new Array();
 
-	tag.push("URL" + (URL_NUM + 1) + " : " + "<input type=\"input\" style=\"width:450px\" id=\"url" + URL_NUM + "\">");
+	tag.push("URL" + (URL_NUM + 1) + " : " + "<input type=\"input\" style=\"width:80%\" id=\"url" + URL_NUM + "\">");
 	newTag.innerHTML = tag.join("");
 
 	target.appendChild(newTag);

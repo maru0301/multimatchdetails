@@ -72,6 +72,8 @@ header h1 {
 	height: 100%;
 }
 
+/* Tab */
+
 .tab {
 	list-style-type:none; /*リスト表示の点などは表示しない*/
 	overflow:hidden;
@@ -101,6 +103,35 @@ header h1 {
 	display:none;
 }
 
+/* Checkbox */
+
+.filter_check_box + .filter_check_box_label {
+	background-color: rgba(0,0,0,0);
+}
+
+.filter_check_box:checked + .filter_check_box_label {
+	background-color: #CCFF00;
+}
+
+.filter_check_box_label {
+	cursor: pointer;
+	padding:5px;
+	border: 1px solid #434343;
+	border-radius: 5px;
+	margin-bottom:40px;
+}
+
+input {
+	visibility:hidden;
+	width : 0px;
+	height : 0px;
+	margin-bottom:40px;
+}
+
+filter {
+	margin:20px;
+}
+
 /*
 //===========================================================================
 // BanPick
@@ -123,28 +154,6 @@ banpick h1 {
 	color: #000;
 }
 
-label{
-	cursor: pointer;
-	padding:5px;
-	border: 1px solid #434343;
-	border-radius: 5px;
-}
-
-input{
-	display: none;
-}
-
-.check_box:checked + .label {
-	background-color: #CCFF00;
-}
-
-/*
-img {
-	width:48px;
-	height:48px;
-}
-*/
-
 #champion_image {
 	width:48px;
 	height:48px;
@@ -156,11 +165,4 @@ img {
 	margin-top:5px;
 	margin-left:5px;
 	margin-right:5px;
-}
-
-.box2{
-	float:left;
-	height:auto;
-	margin:0;
-	text-align:center;
 }

@@ -20,12 +20,8 @@ class View {
 
 	Init()
 	{
-		console.log("View.Init");
-
 		this.InitBanPick();
 
-		this.ShowPick();
-		this.ShowBan(this.Data.BanPick.Bans);
 	}
 
 	InitBanPick()
@@ -33,7 +29,11 @@ class View {
 		this.InitPick();
 		this.InitBanData();
 
-		this.InitBanFilter();		
+		this.InitPickFilter();
+		this.InitBanFilter();
+
+		this.ShowPick(this.Data.BanPick.Picks);
+		this.ShowBan(this.Data.BanPick.Bans);
 	}
 
 	InitBanData()
@@ -137,7 +137,7 @@ class View {
 
 		for(var i = 0 ; i < matchdetail.MATCHLIST.length ; ++i)
 		{
-			for(var j = 0 ; j < matchdetail.MATCHLIST[i].teams.length ; ++ j)
+			for(var j = 0 ; j < matchdetail.MATCHLIST[i].teams.length ; ++j)
 			{
 				for(var k = 0 ; k < matchdetail.MATCHLIST[i].teams[j].player.length ; ++k)
 				{
@@ -150,7 +150,55 @@ class View {
 							if(this.Data.BanPick.Picks[k][l].championId == matchdetail.MATCHLIST[i].teams[j].player[k].championId)
 							{
 								isSet = true;
-								this.Data.BanPick.Picks[k][l].num++;
+
+								var teamTag = matchdetail.MATCHLIST[i].teams[j].teamTag;
+								var isNum = false;
+								// Num
+								for(var m = 0 ; m < this.Data.BanPick.Picks[k][l].Nums.length ; ++m)
+								{
+									if(this.Data.BanPick.Picks[k][l].Nums[m].teamTag == teamTag)
+									{
+										isNum = true;
+	
+										if(matchdetail.MATCHLIST[i].teams[j].teamId == 100)
+											this.Data.BanPick.Picks[k][l].Nums[m].blue++;
+										else
+											this.Data.BanPick.Picks[k][l].Nums[m].red++;
+										
+										break;
+									}
+								}
+	
+								if(!isNum)
+								{
+									var num_index = this.Data.BanPick.Picks[k][l].Nums.length;
+	
+									this.Data.BanPick.Picks[k][l].Nums[num_index] = {};
+									this.Data.BanPick.Picks[k][l].Nums[num_index].teamTag = teamTag;
+									this.Data.BanPick.Picks[k][l].Nums[num_index].blue = 0;
+									this.Data.BanPick.Picks[k][l].Nums[num_index].red = 0;
+									
+									if(matchdetail.MATCHLIST[i].teams[j].teamId == 100)
+										this.Data.BanPick.Picks[k][l].Nums[num_index].blue++;
+									else
+										this.Data.BanPick.Picks[k][l].Nums[num_index].red++;
+								}
+	
+								// Key
+								var isKey = false;
+								for(var m = 0 ; m < this.Data.BanPick.Picks[k][l].keys.length ; ++m)
+								{
+									if(this.Data.BanPick.Picks[k][l].keys[m] == teamTag)
+									{
+										isKey = true;
+										break;
+									}
+								}
+	
+								if(!isKey)
+								{
+									this.Data.BanPick.Picks[k][l].keys.push(teamTag);
+								}
 
 								break;
 							}
@@ -170,9 +218,20 @@ class View {
 						this.Data.BanPick.Picks[k][index] = {};
 						this.Data.BanPick.Picks[k][index].championId = matchdetail.MATCHLIST[i].teams[j].player[k].championId;
 						this.Data.BanPick.Picks[k][index].championName = matchdetail.GetChampionName(matchdetail.MATCHLIST[i].teams[j].player[k].championId);
-						this.Data.BanPick.Picks[k][index].teams = new Array();
-						this.Data.BanPick.Picks[k][index].teams.push(matchdetail.MATCHLIST[i].teams[j].teamTag);
-						this.Data.BanPick.Picks[k][index].num = 1;
+						this.Data.BanPick.Picks[k][index].keys = new Array();
+						this.Data.BanPick.Picks[k][index].keys.push(matchdetail.MATCHLIST[i].teams[j].teamTag);
+						
+						this.Data.BanPick.Picks[k][index].Nums = new Array();
+						var num_index = this.Data.BanPick.Picks[k][index].Nums.length;
+						this.Data.BanPick.Picks[k][index].Nums[num_index] = {};
+						this.Data.BanPick.Picks[k][index].Nums[num_index].teamTag = matchdetail.MATCHLIST[i].teams[j].teamTag;
+						this.Data.BanPick.Picks[k][index].Nums[num_index].blue = 0;
+						this.Data.BanPick.Picks[k][index].Nums[num_index].red = 0;
+						
+						if(matchdetail.MATCHLIST[i].teams[j].teamId == 100)
+							this.Data.BanPick.Picks[k][index].Nums[num_index].blue++;
+						else
+							this.Data.BanPick.Picks[k][index].Nums[num_index].red++;
 					}
 				}
 			}
@@ -228,6 +287,52 @@ class View {
 			inputTag.value = keys[i];
 			inputTag.name = "BanFilter";
 			inputTag.onchange = UpdateBan;
+			inputTag.checked = true;
+
+			var labelTag = document.createElement("label");
+			labelTag.className = "filter_check_box_label";
+			labelTag.htmlFor = id_name;
+			labelTag.innerHTML = text;
+
+			filterTag.appendChild(inputTag);
+			filterTag.appendChild(labelTag);
+		}
+	}
+
+	InitPickFilter()
+	{
+		var keys = new Array();
+
+		for(var i = 0 ; i < this.Data.BanPick.Picks.length ; ++i)
+		{
+			for(var j = 0 ; j < this.Data.BanPick.Picks[i].length ; ++j)
+			{
+				for(var k = 0 ; k < this.Data.BanPick.Picks[i][j].keys.length ; ++k)
+				{
+					if($.inArray(this.Data.BanPick.Picks[i][j].keys[k], keys) === -1)
+					{
+						keys.push(this.Data.BanPick.Picks[i][j].keys[k]);
+					}
+				}
+			}
+		}
+
+		var filterTag = $('Pick filter div')[0];
+		var id_name = "";
+		var text = "";
+
+		for(var i = 0 ; i < keys.length ; ++i)
+		{
+			id_name = "pick_filter_" + keys[i].toLowerCase();
+			text = keys[i];
+
+			var inputTag = document.createElement("input");
+			inputTag.type = "checkbox";
+			inputTag.className = "filter_check_box";
+			inputTag.id = id_name;
+			inputTag.value = keys[i];
+			inputTag.name = "PickFilter";
+			inputTag.onchange = UpdatePick;
 			inputTag.checked = true;
 
 			var labelTag = document.createElement("label");
@@ -301,6 +406,7 @@ class View {
 		});
 
 		var banTag = $('Ban list')[0];
+		var newTag = document.createElement("div");
 
 		for(var i = 0 ; i < BansListData.length ; ++i)
 		{
@@ -308,55 +414,150 @@ class View {
 			var tip = BansListData[i].championName;
 			var num = BansListData[i].Nums.num;
 	
-			var newTag = document.createElement("div");
 			var imgTag = document.createElement("div");
+			var tag = new Array();
 
+			tag.push("<img id='champion_image' src='" + matchdetail.CDN_URL + "/" + matchdetail.VERSION + "/img/champion/" + champ_img + "' title='" + tip +"'>");
+			tag.push("<p>" + num + "</p>");
+			tag.push("<p class='info_text'>");
+
+			for(var j = 0 ; j < BansListData[i].Nums.length ; ++j)
+			{
+				var teamName = BansListData[i].Nums[j].teamTag;
+				var blueNum = BansListData[i].Nums[j].blue;
+				var redNum = BansListData[i].Nums[j].red;
+
+				tag.push(teamName + " blue : "  + blueNum + " red : " + redNum + "<br/>");				
+			}
+
+			tag.push("</p>");
+			
 			imgTag.id = "champion_image_text";
-			imgTag.innerHTML = "<img id='champion_image' src='" + matchdetail.CDN_URL + "/" + matchdetail.VERSION + "/img/champion/" + champ_img + "' title='" + tip +"'><p>" + num + "</p>";
-			imgTag.className = "";
+			imgTag.innerHTML = tag.join("");
 
 			newTag.appendChild(imgTag);
-			banTag.appendChild(newTag);
 		}
 
+		banTag.appendChild(newTag);
 		banTag.innerHTML = banTag.innerHTML + "<br clear='both'/>";
 	}
 
-	ShowPick()
+	ShowPick(CommonData)
 	{
+		$('Pick list').empty();
+		
+		var keys = $('[name="PickFilter"]:checked').map(function(){
+			return $(this).val();
+		}).get();
+
+		var PicksListData = $.extend(true, [], CommonData);
+
+		// フィルタ
+		for(var i = 0 ; i < PicksListData.length ; ++i)
+		{
+			var lane = PicksListData[i].lane;
+			PicksListData[i] = PicksListData[i].filter(function(value) {
+				for(var i = 0 ; i < keys.length ; ++i)
+				{
+					if($.inArray(keys[i], value.keys) !== -1)
+						return true;
+				}
+
+				return false;
+			});
+
+			PicksListData[i].lane = lane;
+		}
+
+		for(var i = 0 ; i < PicksListData.length ; ++i)
+		{
+			for(var j = 0 ; j < PicksListData[i].length ; ++j)
+			{
+				// Nums
+				PicksListData[i][j].Nums = PicksListData[i][j].Nums.filter(function(value) {
+					if($.inArray(value.teamTag, keys) !== -1)
+						return true;
+					return false;
+				});
+			}
+		}
+
+		// 合計
+		for(var i = 0 ; i < PicksListData.length ; ++i)
+		{
+			for(var j = 0 ; j < PicksListData[i].length ; ++j)
+			{
+				var num = 0;
+				for(var k = 0 ; k < PicksListData[i][j].Nums.length ; ++k)
+				{
+					num = PicksListData[i][j].Nums[k].blue + PicksListData[i][j].Nums[k].red + num;
+				}
+				PicksListData[i][j].Nums.num = num;
+			}
+		}
+
+		// ソート
+		for(var i = 0 ; i < PicksListData.length ; ++i)
+		{
+			PicksListData[i].sort(function(a, b)
+			{
+				if(a.Nums.num < b.Nums.num) return 1;
+				if(a.Nums.num > b.Nums.num) return -1;
+
+				if(a.Nums.num == b.Nums.num)
+				{
+					if(a.championName < b.championName)
+						return -1;
+					else
+						return 1;
+				}
+			});
+		}
+
 		var pickTag = $('Pick list')[0];
 
-		for(var i = 0 ; i < this.Data.BanPick.Picks.length ; ++i)
+		for(var i = 0 ; i < PicksListData.length ; ++i)
 		{
-			var lane = this.Data.BanPick.Picks[i].lane;
+			var lane = PicksListData[i].lane;
 			var laneTag = document.createElement(lane);
-
-			laneTag.innerHTML = "<h2>" + lane + "</h2>";
-
-			for(var j = 0 ; j < this.Data.BanPick.Picks[i].length ; ++j)
+			
+			laneTag.innerHTML = "<h2><u>" + lane + "</u></h2>";
+			var newTag = document.createElement("div");
+			
+			for(var j = 0 ; j < PicksListData[i].length ; ++j)
 			{
-				var champ_img = matchdetail.GetChampionImgName(this.Data.BanPick.Picks[i][j].championId);
-				var tip = this.Data.BanPick.Picks[i][j].championName;
-				var num = this.Data.BanPick.Picks[i][j].num;
+				var champ_img = matchdetail.GetChampionImgName(PicksListData[i][j].championId);
+				var tip = PicksListData[i][j].championName;
+				var num = PicksListData[i][j].Nums.num;
 
-				var newTag = document.createElement("div");
 				var imgTag = document.createElement("div");
+				var tag = new Array();
 
+				tag.push("<img id='champion_image' src='" + matchdetail.CDN_URL + "/" + matchdetail.VERSION + "/img/champion/" + champ_img + "' title='" + tip +"'>");
+				tag.push("<p>" + num + "</p>");
+				tag.push("<p class='info_text'>");
+	
+				for(var k = 0 ; k < PicksListData[i][j].Nums.length ; ++k)
+				{
+					var teamName = PicksListData[i][j].Nums[k].teamTag;
+					var blueNum = PicksListData[i][j].Nums[k].blue;
+					var redNum = PicksListData[i][j].Nums[k].red;
+	
+					tag.push(teamName + " blue : "  + blueNum + " red : " + redNum + "<br/>");				
+				}
+	
+				tag.push("</p>");
+				
 				imgTag.id = "champion_image_text";
-				imgTag.innerHTML = "<img id='champion_image' src='" + matchdetail.CDN_URL + "/" + matchdetail.VERSION + "/img/champion/" + champ_img + "' title='" + tip +"'><p>" + num + "</p>";
-				imgTag.className = "";
+				imgTag.innerHTML = tag.join("");
 	
 				newTag.appendChild(imgTag);
-				laneTag.appendChild(newTag);
 			}
+
+			laneTag.appendChild(newTag);
 			pickTag.appendChild(laneTag);
 			pickTag.innerHTML = pickTag.innerHTML + "<br clear='both'/>";
 		}
-	}
-
-	FilterBanPick()
-	{
-		console.log("FilterBanPick");
 	}
 }
 
@@ -389,6 +590,11 @@ $(function() {
 function UpdateBan()
 {
 	view.ShowBan(view.Data.BanPick.Bans);
+}
+
+function UpdatePick()
+{
+	view.ShowPick(view.Data.BanPick.Picks);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

@@ -129,7 +129,7 @@ input {
 }
 
 filter {
-	margin:20px;
+	margin:0px;
 }
 
 /*
@@ -160,9 +160,17 @@ banpick h1 {
 }
 
 #champion_image_text {
-	float:left;	
+    display: inline-block; /* インラインブロック化 */
+    vertical-align: top;   /* 上端を揃える */
 	text-align:center;
-	margin-top:5px;
-	margin-left:5px;
-	margin-right:5px;
+	margin:12px;
+}
+
+.info_text {
+	font-size: 12px;
+	text-align:left;
+}
+
+banpick hr {
+	margin: 0px;
 }

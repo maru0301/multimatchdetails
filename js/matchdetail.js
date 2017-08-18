@@ -107,7 +107,6 @@ class MatchDetail {
 
 	ParseMatchDetailJson(JsonData)
 	{
-		console.log(JsonData);
 		for(var i = 0 ; i < JsonData.length ; ++i)
 		{
 			// Game

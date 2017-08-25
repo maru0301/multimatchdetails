@@ -164,7 +164,10 @@ class View {
 											this.Data.BanPick.Picks[k][l].Nums[m].blue++;
 										else
 											this.Data.BanPick.Picks[k][l].Nums[m].red++;
-										
+
+										if(matchdetail.MATCHLIST[i].teams[j].win)
+											this.Data.BanPick.Picks[k][l].Nums[m].win++;
+
 										break;
 									}
 								}
@@ -177,11 +180,15 @@ class View {
 									this.Data.BanPick.Picks[k][l].Nums[num_index].teamTag = teamTag;
 									this.Data.BanPick.Picks[k][l].Nums[num_index].blue = 0;
 									this.Data.BanPick.Picks[k][l].Nums[num_index].red = 0;
+									this.Data.BanPick.Picks[k][l].Nums[num_index].win = 0;
 									
 									if(matchdetail.MATCHLIST[i].teams[j].teamId == 100)
 										this.Data.BanPick.Picks[k][l].Nums[num_index].blue++;
 									else
 										this.Data.BanPick.Picks[k][l].Nums[num_index].red++;
+
+									if(matchdetail.MATCHLIST[i].teams[j].win)
+										this.Data.BanPick.Picks[k][l].Nums[num_index].win++;
 								}
 	
 								// Key
@@ -227,11 +234,15 @@ class View {
 						this.Data.BanPick.Picks[k][index].Nums[num_index].teamTag = matchdetail.MATCHLIST[i].teams[j].teamTag;
 						this.Data.BanPick.Picks[k][index].Nums[num_index].blue = 0;
 						this.Data.BanPick.Picks[k][index].Nums[num_index].red = 0;
+						this.Data.BanPick.Picks[k][index].Nums[num_index].win = 0;
 						
 						if(matchdetail.MATCHLIST[i].teams[j].teamId == 100)
 							this.Data.BanPick.Picks[k][index].Nums[num_index].blue++;
 						else
 							this.Data.BanPick.Picks[k][index].Nums[num_index].red++;
+
+						if(matchdetail.MATCHLIST[i].teams[j].win)
+							this.Data.BanPick.Picks[k][index].Nums[num_index].win++;
 					}
 				}
 			}
@@ -488,11 +499,14 @@ class View {
 			for(var j = 0 ; j < PicksListData[i].length ; ++j)
 			{
 				var num = 0;
+				var win = 0;
 				for(var k = 0 ; k < PicksListData[i][j].Nums.length ; ++k)
 				{
 					num = PicksListData[i][j].Nums[k].blue + PicksListData[i][j].Nums[k].red + num;
+					win = PicksListData[i][j].Nums[k].win + win;
 				}
 				PicksListData[i][j].Nums.num = num;
+				PicksListData[i][j].Nums.win = win;
 			}
 		}
 
@@ -529,12 +543,15 @@ class View {
 				var champ_img = matchdetail.GetChampionImgName(PicksListData[i][j].championId);
 				var tip = PicksListData[i][j].championName;
 				var num = PicksListData[i][j].Nums.num;
+				var winRate = (PicksListData[i][j].Nums.win / PicksListData[i][j].Nums.num) * 10000;
+				winRate = Math.round(winRate) / 100;
 
 				var imgTag = document.createElement("div");
 				var tag = new Array();
 
 				tag.push("<img id='champion_image' src='" + matchdetail.CDN_URL + "/" + matchdetail.VERSION + "/img/champion/" + champ_img + "' title='" + tip +"'>");
-				tag.push("<p>" + num + "</p>");
+				tag.push("<p>WinRate : " + winRate + "%</p>");
+				tag.push("<p>Total Pick Num : " + num + "</p>");
 				tag.push("<p class='info_text'>");
 	
 				for(var k = 0 ; k < PicksListData[i][j].Nums.length ; ++k)

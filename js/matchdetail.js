@@ -117,6 +117,7 @@ class MatchDetail {
 			{
 				this.MATCHLIST[i].teams[j] = {};
 				this.MATCHLIST[i].teams[j].teamId = JsonData[i].teams[j].teamId;
+				this.MATCHLIST[i].teams[j].win = JsonData[i].teams[j].win == "Win" ? true : false;
 
 				// TeamTag
 				for(var k = 0 ; k < JsonData[i].participants.length ; ++k)

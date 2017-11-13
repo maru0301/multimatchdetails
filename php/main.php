@@ -3,6 +3,17 @@
 if( !isset( $_GET['func'] ) ) return;
 
 //-------------------------------------------------
+class foo {
+    private $a;
+    public $b = 1;
+    public $c;
+    private $d;
+    static $e;
+   
+    public function test() {
+        var_dump(get_object_vars($this));
+    }
+}
 
 class RiotApi
 {
@@ -15,8 +26,11 @@ class RiotApi
 		$url = "https://acs.leagueoflegends.com/v1/stats/game/" . $gameRealm . "/" . $gameId . "?gameHash=" . $gameHash;
 
 		$json = file_get_contents($url);
+		$json = json_decode($json, true);
+		$index = array('index' => intval($_GET['index']));
+		$json = array_merge($json, $index);
 		
-		return $json;
+		return json_encode($json);
 	}
 
 	public function GetMatchTimeline()

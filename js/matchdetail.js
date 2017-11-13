@@ -51,6 +51,7 @@ class MatchDetail {
 			this.MATCHLIST[i].game.gameVer = "";
 
 			this.MATCHLIST[i].teams = new Array();
+			this.MATCHLIST[i].isGetJson = false;
 		}
 	}
 	
@@ -107,83 +108,83 @@ class MatchDetail {
 
 	ParseMatchDetailJson(JsonData)
 	{
-		for(var i = 0 ; i < JsonData.length ; ++i)
+		var index = JsonData.index;
+		// Game
+		this.MATCHLIST[index].game.gameVer = JsonData.gameVersion;
+
+		// Team
+		for(var j = 0 ; j < JsonData.teams.length ; ++j)
 		{
-			// Game
-			this.MATCHLIST[i].game.gameVer = JsonData[i].gameVersion;
+			this.MATCHLIST[index].teams[j] = {};
+			this.MATCHLIST[index].teams[j].teamId = JsonData.teams[j].teamId;
+			this.MATCHLIST[index].teams[j].win = JsonData.teams[j].win == "Win" ? true : false;
 
-			// Team
-			for(var j = 0 ; j < JsonData[i].teams.length ; ++j)
+			// TeamTag
+			for(var k = 0 ; k < JsonData.participants.length ; ++k)
 			{
-				this.MATCHLIST[i].teams[j] = {};
-				this.MATCHLIST[i].teams[j].teamId = JsonData[i].teams[j].teamId;
-				this.MATCHLIST[i].teams[j].win = JsonData[i].teams[j].win == "Win" ? true : false;
-
-				// TeamTag
-				for(var k = 0 ; k < JsonData[i].participants.length ; ++k)
+				// TeamIDが同じか
+				if(this.MATCHLIST[index].teams[j].teamId == JsonData.participants[k].teamId)
 				{
-					// TeamIDが同じか
-					if(this.MATCHLIST[i].teams[j].teamId == JsonData[i].participants[k].teamId)
+					var participantId = JsonData.participants[k].participantId;
+					// プレイヤーの名前を引っ張ってくる
+					for(var l = 0 ; l < JsonData.participantIdentities.length ; ++l)
 					{
-						var participantId = JsonData[i].participants[k].participantId;
-						// プレイヤーの名前を引っ張ってくる
-						for(var l = 0 ; l < JsonData[i].participantIdentities.length ; ++l)
+						if(participantId == JsonData.participantIdentities[l].participantId)
 						{
-							if(participantId == JsonData[i].participantIdentities[l].participantId)
-							{
-								var tag = JsonData[i].participantIdentities[l].player.summonerName;
-								var index = tag.search(" ");
-								tag = tag.substr(0, index);
+							var tag = JsonData.participantIdentities[l].player.summonerName;
+							var tagindex = tag.search(" ");
+							tag = tag.substr(0, tagindex);
 
-								this.MATCHLIST[i].teams[j].teamTag = tag;
-								break;
-							}
+							this.MATCHLIST[index].teams[j].teamTag = tag;
+							break;
 						}
 					}
 				}
-
-				// Ban
-				this.MATCHLIST[i].teams[j].bans = new Array();
-				for(var k = 0 ; k < JsonData[i].teams[j].bans.length ; ++k)
-				{
-					this.MATCHLIST[i].teams[j].bans[k] = {};
-					this.MATCHLIST[i].teams[j].bans[k].championId = JsonData[i].teams[j].bans[k].championId;
-					this.MATCHLIST[i].teams[j].bans[k].pickTurn = JsonData[i].teams[j].bans[k].pickTurn;
-				}
 			}
 
-			// Player
-			for(var j = 0 ; j < this.MATCHLIST[i].teams.length ; ++j)
+			// Ban
+			this.MATCHLIST[index].teams[j].bans = new Array();
+			for(var k = 0 ; k < JsonData.teams[j].bans.length ; ++k)
 			{
-				var setIndex = 0;
-				for(var k = 0 ; k < JsonData[i].participants.length ; ++k)
+				this.MATCHLIST[index].teams[j].bans[k] = {};
+				this.MATCHLIST[index].teams[j].bans[k].championId = JsonData.teams[j].bans[k].championId;
+				this.MATCHLIST[index].teams[j].bans[k].pickTurn = JsonData.teams[j].bans[k].pickTurn;
+			}
+		}
+
+		// Player
+		for(var j = 0 ; j < this.MATCHLIST[index].teams.length ; ++j)
+		{
+			var setIndex = 0;
+			for(var k = 0 ; k < JsonData.participants.length ; ++k)
+			{
+				if(this.MATCHLIST[index].teams[j].teamId == JsonData.participants[k].teamId)
 				{
-					if(this.MATCHLIST[i].teams[j].teamId == JsonData[i].participants[k].teamId)
-					{
-						this.CreatePlayerObject(i, j, setIndex);
+					this.CreatePlayerObject(index, j, setIndex);
 
-						this.MATCHLIST[i].teams[j].player[setIndex].championId = JsonData[i].participants[k].championId;
-						this.MATCHLIST[i].teams[j].player[setIndex].participantId = JsonData[i].participants[k].participantId;
+					this.MATCHLIST[index].teams[j].player[setIndex].championId = JsonData.participants[k].championId;
+					this.MATCHLIST[index].teams[j].player[setIndex].participantId = JsonData.participants[k].participantId;
 
-						setIndex++;
-					}
+					setIndex++;
 				}
 			}
-			
-			for(var j = 0 ; j < this.MATCHLIST[i].teams.length ; ++j)
+		}
+		
+		for(var j = 0 ; j < this.MATCHLIST[index].teams.length ; ++j)
+		{
+			for(var k = 0 ; k < this.MATCHLIST[index].teams[j].player.length ; ++k)
 			{
-				for(var k = 0 ; k < this.MATCHLIST[i].teams[j].player.length ; ++k)
+				for(var l = 0 ; l < JsonData.participantIdentities.length ; ++l)
 				{
-					for(var l = 0 ; l < JsonData[i].participantIdentities.length ; ++l)
+					if(this.MATCHLIST[index].teams[j].player[k].participantId == JsonData.participantIdentities[l].participantId)
 					{
-						if(this.MATCHLIST[i].teams[j].player[k].participantId == JsonData[i].participantIdentities[l].participantId)
-						{
-							this.MATCHLIST[i].teams[j].player[k].name = JsonData[i].participantIdentities[l].player.summonerName;
-						}
+						this.MATCHLIST[index].teams[j].player[k].name = JsonData.participantIdentities[l].player.summonerName;
 					}
 				}
 			}
 		}
+
+		this.MATCHLIST[index].isGetJson = true;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -195,15 +196,18 @@ class MatchDetail {
 		var self = this;
 		var jqXHRList = [];
 
-		for(var i = 0 ; i < this.MATCHLIST.length ; ++i)
+		for(var i = 0 ; i < self.MATCHLIST.length ; ++i)
 		{
-			jqXHRList.push($.ajax(
+			if(!self.MATCHLIST[i].isGetJson)
 			{
-				url: './php/main.php',
-				type: 'GET',
-				dataType: 'json',
-				data: { func:"GetMatchDetails", realm:this.MATCHLIST[i].game.gameRealm, id:this.MATCHLIST[i].game.gameId, hash:this.MATCHLIST[i].game.gameHash }
-			}));
+				jqXHRList.push($.ajax(
+				{
+					url: './php/main.php',
+					type: 'GET',
+					dataType: 'json',
+					data: { func:"GetMatchDetails", realm:self.MATCHLIST[i].game.gameRealm, id:self.MATCHLIST[i].game.gameId, hash:self.MATCHLIST[i].game.gameHash, index:i }
+				}));
+			}
 		}
 		
 		$.when.apply(null, jqXHRList).done(function ()
@@ -221,7 +225,8 @@ class MatchDetail {
 			}
 			
 			// Jsonパース
-			self.ParseMatchDetailJson(json);
+			for(var i = 0 ; i < json.length ; ++i)
+				self.ParseMatchDetailJson(json[i]);
 
 			view.Init();
 		});
@@ -233,12 +238,18 @@ class MatchDetail {
 
 			for( var i = 0 ; i < jqXHRList.length ; ++i )
 			{
-				if( jqXHRList[i].statusText === "error" )
+				if( jqXHRList[i].statusText === "error" || jqXHRList[i].responseJSON === undefined)
 				{
-					console.log(request[i].error_id);
+					console.log("Fail index: " + i);
+				}
+				else
+				{
+					// 成功した物は保存
+					self.ParseMatchDetailJson(jqXHRList[i].responseJSON);
 				}
 			}
-
+			// 1秒待つ
+			setTimeout(self.GetMatchDetailJson(), 1000);
 		});
 	}
 	

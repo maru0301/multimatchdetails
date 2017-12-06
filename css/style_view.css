@@ -72,10 +72,24 @@ header h1 {
 	height: 100%;
 }
 
-/* Tab */
 
+section h1, section h2 {
+	font-size:18px;
+	padding:6px;
+	margin-bottom:15px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0px 0px 4px #666;
+	-moz-box-shadow: 0px 0px 4px #666;
+	box-shadow: 0px 0px 4px #666;
+	background-color: rgba(25,25,25,0.8);
+	color:#fff;
+}
+
+/* Tab */
 .tab {
-	list-style-type:none; /*リスト表示の点などは表示しない*/
+	list-style-type:none;
 	overflow:hidden;
 	cursor : pointer;
 }
@@ -94,7 +108,7 @@ header h1 {
 }
 
 .content li {
-	list-style-type:none; /*リスト表示の点などは表示しない*/
+	list-style-type:none;
 	background:#eee;
 	padding:20px;
 }
@@ -160,8 +174,8 @@ banpick h1 {
 }
 
 #champion_image_text {
-    display: inline-block; /* インラインブロック化 */
-    vertical-align: top;   /* 上端を揃える */
+    display: inline-block;
+    vertical-align: top;
 	text-align:center;
 	margin:12px;
 }
@@ -173,4 +187,267 @@ banpick h1 {
 
 banpick hr {
 	margin: 0px;
+}
+
+
+/*
+//===========================================================================
+// OverView
+//===========================================================================
+*/
+
+#overview {
+	min-width:1200px;
+	max-width:1200px;
+}
+
+.overview {
+	overflow:hidden;
+	min-width:1200px;
+	max-width:1200px;
+	font-size:16px;
+}
+
+/*
+//----------------------------------------------------------
+// Blue Team
+//----------------------------------------------------------
+*/
+
+.overview .blueScoreBoard, .overview .redScoreBoard {
+	float: left;
+	width:50%;
+	height:350px;
+}
+
+/*
+// Team Details
+*/
+
+.overview .team-header {
+	width:100%;
+	height:4%;
+	display: table;
+	border-top: groove 1px;
+	border-bottom: groove 1px;
+}
+
+.overview .teamTag {
+	float: left;
+	width:14.8%;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .teamWin {
+	float: left;
+	width:28.4%;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .teamKDA {
+	float: left;
+	width:11.5%;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .teamSpace {
+	float: left;
+	width:31.26%;
+	height:100%;
+}
+
+.overview .teamGold {
+	float: left;
+	width:13.2%;
+}	
+
+.overview .teamTag {
+	border-left: groove 1px;
+	border-right: groove 1px;	
+}
+
+.overview .teamKDA {
+	border-left: groove 1px;
+	border-right: groove 1px;	
+}
+
+.overview .teamGold {
+	border-left: groove 1px;
+}
+
+.overview .redScoreBoard .teamGold {
+	border-right: groove 1px;
+}
+
+.overview .redScoreBoard .teamSpace {
+	width:31.2%;
+}
+
+.overview .redScoreBoard .teamWin {
+	width:28.3%;
+}
+
+/*
+// Player
+*/
+
+.overview .players {
+	float:left;
+	width:100%;
+	height:90%;
+}
+
+.overview .player {
+	height:19.3%;
+}
+
+.overview .champion {
+	float: left;
+	width:10%;
+	height:100%;
+}
+
+.overview .championImg {
+	float: left;
+	position: relative;
+	width :100%;
+	height:100%;
+}
+
+.overview .champion img {
+	width:100%;
+	height:100%;
+}
+
+.overview .champion p {
+	position: absolute;
+	color: white;
+	top: 60%;
+	left: 5%;
+    text-shadow: 2px 2px 1px #000,
+    -2px 2px 1px #000,
+    2px -2px 1px #000,
+    -2px -2px 1px #000;
+}
+
+.overview .spells {
+	float:left;
+	width:5%;
+	height:100%;
+}
+
+.overview .spells .spell {
+	float: left;
+	width:100%;
+	height:50%;
+}
+
+.overview .spell img{
+	width:100%;
+	height:100%;
+}
+
+.overview .playerName {
+	float: left;
+	width:28.4%;
+	height:100%;
+	display: table;
+}
+
+.overview .playerName p {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .kda {
+	float: left;
+	width:11.5%;
+	height:100%;
+	display: table;	
+	border-left: groove 1px;
+	border-right: groove 1px;
+}
+
+.overview .kda p {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .items {
+	float: left;
+	width:13%;
+	height:100%;
+}
+
+.overview .item {
+	float: left;
+	width:33%;
+	height:50%;
+}
+
+.overview .items img {
+	width:100%;
+	height:100%;
+}
+
+.overview .trinket {
+	float: left;
+	width:5%;
+	height:100%;
+	display: table;
+}
+
+.overview .trinketItem {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .trinketItem img {
+	width:89%;
+	height:40%;
+}
+
+.overview .cs, .overview .gold {
+	float: left;
+	width:13.2%;
+	height:100%;
+	display: table;
+	border-left: groove 1px;
+}
+
+.overview .cs p, .overview .gold p {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .player {
+	border: groove 0px;
+}
+
+.overview section {
+	height : auto;
+}
+
+.overview .blueScoreBoard .playerName {
+	border-left: groove 1px;
+}
+
+.overview .redScoreBoard .playerName {
+	border-right: groove 1px;
+}
+
+.overview .redScoreBoard .items {
+	border-left: groove 1px;
+}
+
+.overview .redScoreBoard .trinket {
+	width:4.9%;
+}
+
+.overview .player {
+	border-bottom: groove 1px;	
 }

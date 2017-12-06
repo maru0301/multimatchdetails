@@ -150,6 +150,13 @@ class MatchDetail {
 				this.MATCHLIST[index].teams[j].bans[k].championId = JsonData.teams[j].bans[k].championId;
 				this.MATCHLIST[index].teams[j].bans[k].pickTurn = JsonData.teams[j].bans[k].pickTurn;
 			}
+
+			// Stats
+			this.MATCHLIST[index].teams[j].stats = {};
+			this.MATCHLIST[index].teams[j].stats.baronKills = JsonData.teams[j].baronKills;
+			this.MATCHLIST[index].teams[j].stats.dragonKills = JsonData.teams[j].dragonKills;
+			this.MATCHLIST[index].teams[j].stats.riftHeraldKills = JsonData.teams[j].riftHeraldKills;
+			this.MATCHLIST[index].teams[j].stats.towerKills = JsonData.teams[j].towerKills;
 		}
 
 		// Player
@@ -164,6 +171,8 @@ class MatchDetail {
 
 					this.MATCHLIST[index].teams[j].player[setIndex].championId = JsonData.participants[k].championId;
 					this.MATCHLIST[index].teams[j].player[setIndex].participantId = JsonData.participants[k].participantId;
+					this.MATCHLIST[index].teams[j].player[setIndex].spells = new Array(JsonData.participants[k].spell1Id, JsonData.participants[k].spell2Id);
+					this.MATCHLIST[index].teams[j].player[setIndex].stats = JsonData.participants[k].stats;
 
 					setIndex++;
 				}

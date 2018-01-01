@@ -217,7 +217,7 @@ banpick hr {
 .overview .blueScoreBoard, .overview .redScoreBoard {
 	float: left;
 	width:50%;
-	height:350px;
+	height:400px;
 }
 
 /*
@@ -298,7 +298,7 @@ banpick hr {
 .overview .players {
 	float:left;
 	width:100%;
-	height:90%;
+	height:80%;
 }
 
 .overview .player {
@@ -432,6 +432,65 @@ banpick hr {
 	height : auto;
 }
 
+/*
+// Bans Object
+*/
+.overview .team-ban-object {
+	float: left;
+	height : auto;
+	width:100%;
+}
+
+
+.overview .team-ban-object .bans{
+	float: left;
+	height:100%;
+	width:60%;
+	display: table;
+}
+
+.overview .team-ban-object .object{
+	float: left;
+	height:100%;
+	display: table;
+}
+
+.overview .team-ban-object .bans_txt{
+	display: table-cell;
+	vertical-align: middle;
+	width:10%;
+}
+
+.overview .team-ban-object .bans_img{
+	float: left;
+}
+
+.overview .team-ban-object .bans_img img{
+	float: left;
+	width:34px;
+	height:34px;
+}
+
+
+.overview .team-ban-object .object_contents{
+	float: left;
+	display: table;
+}
+
+.overview .team-ban-object .object .object_canvas{
+	float: left;
+	width:34px;
+	height:34px;
+}
+
+.overview .team-ban-object .object .object_txt{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+/* 
+// Line
+*/
 .overview .blueScoreBoard .playerName {
 	border-left: groove 1px;
 }

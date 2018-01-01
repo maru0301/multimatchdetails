@@ -7,6 +7,8 @@ class OverView {
 	constructor()
 	{
 		this.Data = new Array();
+
+		this.ImgMap = new Map();
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -16,13 +18,22 @@ class OverView {
 	Init()
 	{
 		this.InitData();
+
+		const map = new Map();
+
+		this.DisplayImage("object_turret_canvas", "./data/img/dragon.png");
+		this.DisplayImage("object_inhibitor_canvas", "./data/img/inhibitor_building.png");
+		this.DisplayImage("object_baron_canvas", "./data/img/baron_nashor.png");
+		this.DisplayImage("object_dragon_canvas", "./data/img/dragon.png");
+		this.DisplayImage("object_riftherald_canvas", "./data/img/riftherald.png");
 	}
 
 	InitData()
 	{
-		this.InitMatch();
+//		this.InitMatch();
 
-		this.ShowMatch(this.Data);
+//		this.ShowMatch(this.Data);
+		
 /*
 		this.ShowPick(this.Data.BanPick.Picks);
 		this.ShowBan(this.Data.BanPick.Bans);
@@ -248,6 +259,56 @@ class OverView {
 			pickTag.innerHTML = pickTag.innerHTML + "<br clear='both'/>";
 		}
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////
+	// Canvas
+	////////////////////////////////////////////////////////////////////////////////////
+
+	DisplayImage(IdName,ImgSrc)
+	{
+		const picWidth = 34;
+		const picHeight = 34;
+		const picLength = picWidth * picHeight;
+
+		var target = $(`#${IdName}`)[0];
+		
+		target.width = picWidth;
+		target.height = picHeight;
+		
+		if (target.getContext)
+		{
+			this.ImgMap.set(IdName, new Image());
+
+			let ctx = target.getContext("2d");
+			let img = this.ImgMap.get(IdName);
+
+			img.src = ImgSrc;
+			
+			img.onload = function()
+			{				
+				ctx.drawImage(this, 0, 0, picWidth, picHeight);
+
+				let img = ctx.getImageData(0, 0, picWidth, picHeight);
+
+				for (let i = 0; i < picLength * 4; i += 4)
+				{
+					if(img.data[i+3] != 0 && img.data[i]>10)
+					{
+						// Red
+			//			myImage.data[i] = 255;
+			//			myImage.data[i+1] = 0;
+			//			myImage.data[i+2] = 0;
+						// Blue
+						img.data[i] = 0;
+						img.data[i+1] = 0;
+						img.data[i+2] = 255;
+					}
+				}
+
+				ctx.putImageData(img, 0, 0);
+			}
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -262,7 +323,8 @@ function UpdatePick()
 	view.ShowPick(view.Data.BanPick.Picks);
 }
 
+var myImage = new Image(); // Create a new blank image.
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 var overview = new OverView();
-

@@ -19,13 +19,17 @@ class OverView {
 	{
 		this.InitData();
 
-		const map = new Map();
+		this.DisplayImage("blueScoreBoard", "object_turret_canvas", "./data/img/dragon.png");
+		this.DisplayImage("blueScoreBoard", "object_inhibitor_canvas", "./data/img/inhibitor_building.png");
+		this.DisplayImage("blueScoreBoard", "object_baron_canvas", "./data/img/baron_nashor.png");
+		this.DisplayImage("blueScoreBoard", "object_dragon_canvas", "./data/img/dragon.png");
+		this.DisplayImage("blueScoreBoard", "object_riftherald_canvas", "./data/img/riftherald.png");
 
-		this.DisplayImage("object_turret_canvas", "./data/img/dragon.png");
-		this.DisplayImage("object_inhibitor_canvas", "./data/img/inhibitor_building.png");
-		this.DisplayImage("object_baron_canvas", "./data/img/baron_nashor.png");
-		this.DisplayImage("object_dragon_canvas", "./data/img/dragon.png");
-		this.DisplayImage("object_riftherald_canvas", "./data/img/riftherald.png");
+		this.DisplayImage("redScoreBoard", "object_turret_canvas", "./data/img/dragon.png");		
+		this.DisplayImage("redScoreBoard", "object_inhibitor_canvas", "./data/img/inhibitor_building.png");
+		this.DisplayImage("redScoreBoard", "object_baron_canvas", "./data/img/baron_nashor.png");
+		this.DisplayImage("redScoreBoard", "object_dragon_canvas", "./data/img/dragon.png");
+		this.DisplayImage("redScoreBoard", "object_riftherald_canvas", "./data/img/riftherald.png");
 	}
 
 	InitData()
@@ -264,13 +268,13 @@ class OverView {
 	// Canvas
 	////////////////////////////////////////////////////////////////////////////////////
 
-	DisplayImage(IdName,ImgSrc)
+	DisplayImage(Side,IdName,ImgSrc)
 	{
 		const picWidth = 34;
 		const picHeight = 34;
 		const picLength = picWidth * picHeight;
 
-		var target = $(`#${IdName}`)[0];
+		var target = $(`.${Side} #${IdName}`)[0];
 		
 		target.width = picWidth;
 		target.height = picHeight;
@@ -294,14 +298,20 @@ class OverView {
 				{
 					if(img.data[i+3] != 0 && img.data[i]>10)
 					{
-						// Red
-			//			myImage.data[i] = 255;
-			//			myImage.data[i+1] = 0;
-			//			myImage.data[i+2] = 0;
-						// Blue
-						img.data[i] = 0;
-						img.data[i+1] = 0;
-						img.data[i+2] = 255;
+						if(Side === "redScoreBoard")
+						{
+							// Red
+							img.data[i] = 255;
+							img.data[i+1] = 0;
+							img.data[i+2] = 0;
+						}
+						else
+						{
+							// Blue
+							img.data[i] = 0;
+							img.data[i+1] = 0;
+							img.data[i+2] = 255;
+						}
 					}
 				}
 

@@ -494,7 +494,7 @@ banpick hr {
 }
 
 .overview .redScoreBoard .teamTag {
-	border-left: groove 1px;	
+	border-right: groove 1px;	
 }
 
 .overview .teamKDA {
@@ -507,7 +507,7 @@ banpick hr {
 }
 
 .overview .redScoreBoard .teamGold {
-	border-right: groove 1px;
+	border-left: groove 1px;
 }
 
 .overview .player {

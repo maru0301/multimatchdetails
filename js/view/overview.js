@@ -19,6 +19,8 @@ class OverView {
 	{
 		this.InitData();
 
+		return;
+	
 		this.DisplayImage("blueScoreBoard", "object_turret_canvas", "./data/img/turret.png");
 		this.DisplayImage("blueScoreBoard", "object_inhibitor_canvas", "./data/img/inhibitor_building.png");
 		this.DisplayImage("blueScoreBoard", "object_baron_canvas", "./data/img/baron_nashor.png");
@@ -34,9 +36,9 @@ class OverView {
 
 	InitData()
 	{
-//		this.InitMatch();
+		this.InitMatch();
 
-//		this.ShowMatch(this.Data);
+		this.ShowMatch(this.Data);
 		
 /*
 		this.ShowPick(this.Data.BanPick.Picks);
@@ -71,6 +73,7 @@ class OverView {
 
 				// Bans
 				Match[i].teams[j].bans = new Array();
+
 				for(var k = 0 ; k < matchdetail.MATCHLIST[i].teams[j].bans.length ; ++k)
 				{
 					Match[i].teams[j].bans.push(matchdetail.MATCHLIST[i].teams[j].bans[k]);
@@ -101,7 +104,9 @@ class OverView {
 			newHeaderTag.innerHTML = "Match"+(i+1);
 
 //			newSectionTag.appendChild(newHeaderTag);
-//			target.appendChild(newSectionTag);
+			target.appendChild(newHeaderTag);
+
+			this.ShowScoreBoard(CommonData[i]);	
 		}
 
 		return;
@@ -140,6 +145,108 @@ class OverView {
 		banTag.innerHTML = banTag.innerHTML + "<br clear='both'/>";
 	}
 
+	ShowScoreBoard(CommonData)
+	{
+		let target = $('.overview')[0];
+
+		for(let i = 0 ; i < CommonData.teams.length ; ++i)
+		{
+			let scoreTag = document.createElement("div");
+			scoreTag.className = CommonData.teams[i].teamId == 100 ? "blueScoreBoard" : "redScoreBoard";
+
+			target.appendChild(scoreTag);
+
+			this.ShowTeamHeader(CommonData.teams[i], scoreTag, scoreTag.className);
+			this.ShowPlayers(CommonData.teams[i], scoreTag, scoreTag.className);
+		}
+	}
+
+	ShowTeamHeader(Data, Target, TargetClassName)
+	{
+		let teamHeaderTag = document.createElement("div");
+		teamHeaderTag.className = "team-header";
+		
+		Target.appendChild(teamHeaderTag);
+
+		Target = teamHeaderTag;
+
+		let addTag = document.createElement("div");
+
+		addTag.className = "teamTag";
+		addTag.innerHTML = Data.teamTag;
+		Target.appendChild(addTag);
+
+		addTag = document.createElement("div");
+		addTag.className = "teamWin";
+		addTag.innerHTML = Data.win === true ? "Win" : "Lose";
+		Target.appendChild(addTag);
+
+		addTag = document.createElement("div");
+		addTag.className = "teamKDA";
+
+		let kills = 0;
+		let deaths = 0;
+		let assists = 0;
+		let gold = 0;
+
+		for(let i = 0 ; i < Data.player.length ; ++i)
+		{
+			kills += Data.player[i].stats.kills;
+			deaths += Data.player[i].stats.deaths;
+			assists += Data.player[i].stats.assists;
+			gold += Data.player[i].stats.goldEarned;
+		}
+
+		addTag.innerHTML = `${kills}/${deaths}/${assists}`;
+		Target.appendChild(addTag);
+
+		addTag = document.createElement("div");
+		addTag.className = "teamSpace";
+		Target.appendChild(addTag);
+
+		addTag = document.createElement("div");
+		addTag.className = "teamGold";
+		gold = Math.round(gold / 100);
+		gold /= 10;
+		addTag.innerHTML = `${gold}k`;
+
+		Target.appendChild(addTag);
+	}
+
+	ShowPlayers(Data, Target, TargetClassName)
+	{
+		let playersTag = document.createElement("div");
+		playersTag.className = "players";
+		
+		Target.appendChild(playersTag);
+
+		Target = playersTag;
+
+		for(let i = 0 ; i < Data.player.length ; ++i)
+		{
+			let player = document.createElement("div");
+			player.className = "player";
+
+			let champ = document.createElement("div");
+			champ.className = "champion";
+			
+			let champImg = document.createElement("div");
+			champImg.className = "championImg";
+
+			let tag = new Array();
+			let champ_img = matchdetail.GetChampionImgName(Data.player[i].championId);
+			tag.push(`<img src="${matchdetail.CDN_URL}/${matchdetail.VERSION}/img/champion/${champ_img}">`);
+			tag.push(`<p>${Data.player[i].stats.champLevel}</p>`);
+			
+			champImg.innerHTML = tag.join("");
+
+			champ.appendChild(champImg);
+			player.appendChild(champ);
+			Target.appendChild(player);
+		}
+	}
+
+	////////////////////////////////////////////////////
 	ShowPick(CommonData)
 	{
 		$('Pick list').empty();

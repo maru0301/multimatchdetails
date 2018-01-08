@@ -19,13 +19,13 @@ class OverView {
 	{
 		this.InitData();
 
-		this.DisplayImage("blueScoreBoard", "object_turret_canvas", "./data/img/dragon.png");
+		this.DisplayImage("blueScoreBoard", "object_turret_canvas", "./data/img/turret.png");
 		this.DisplayImage("blueScoreBoard", "object_inhibitor_canvas", "./data/img/inhibitor_building.png");
 		this.DisplayImage("blueScoreBoard", "object_baron_canvas", "./data/img/baron_nashor.png");
 		this.DisplayImage("blueScoreBoard", "object_dragon_canvas", "./data/img/dragon.png");
 		this.DisplayImage("blueScoreBoard", "object_riftherald_canvas", "./data/img/riftherald.png");
 
-		this.DisplayImage("redScoreBoard", "object_turret_canvas", "./data/img/dragon.png");		
+		this.DisplayImage("redScoreBoard", "object_turret_canvas", "./data/img/turret.png");		
 		this.DisplayImage("redScoreBoard", "object_inhibitor_canvas", "./data/img/inhibitor_building.png");
 		this.DisplayImage("redScoreBoard", "object_baron_canvas", "./data/img/baron_nashor.png");
 		this.DisplayImage("redScoreBoard", "object_dragon_canvas", "./data/img/dragon.png");

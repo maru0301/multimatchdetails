@@ -3,7 +3,6 @@
 // common
 ////////////////////////////////////////////////////////////////////////////
 */
-
 body {
 	background:#aaa;
 	font-family: 'Roboto', Georgia, 'Hiragino Mincho Pro', Meiryo, serif;
@@ -15,7 +14,7 @@ body {
     padding: 100px 0 50px 0;
 }
 
-.bg{
+.bg {
 	width: 100%;
 	height: 100%;
 	background-image: url("../data/raster.png");
@@ -72,7 +71,6 @@ header h1 {
 	height: 100%;
 }
 
-
 section h1, section h2 {
 	font-size:18px;
 	padding:6px;
@@ -118,7 +116,6 @@ section h1, section h2 {
 }
 
 /* Checkbox */
-
 .filter_check_box + .filter_check_box_label {
 	background-color: rgba(0,0,0,0);
 }
@@ -151,7 +148,6 @@ filter {
 // BanPick
 //===========================================================================
 */
-
 banpick {
 	text-align:left;
 }
@@ -181,7 +177,7 @@ banpick h1 {
 }
 
 .info_text {
-	font-size: 12px;
+	font-size: 10px;
 	text-align:left;
 }
 
@@ -189,62 +185,52 @@ banpick hr {
 	margin: 0px;
 }
 
-
 /*
 //===========================================================================
 // OverView
 //===========================================================================
 */
-
-#overview {
-	min-width:1200px;
-	max-width:1200px;
-}
-
 .overview {
 	overflow:hidden;
-	min-width:1200px;
-	max-width:1200px;
+	min-width:1203px;
+	max-width:1203px;
 	font-size:16px;
 }
 
 .overview h1 {
 	clear:both;
 }
+
 /*
 //----------------------------------------------------------
 // Blue Team
 //----------------------------------------------------------
 */
-
 .overview .blueScoreBoard, .overview .redScoreBoard {
 	float: left;
-	width:50%;
+	width:600px;
 	height:400px;
 }
 
 /*
 // Team Details
 */
-
 .overview .team-header {
 	width:100%;
 	height:4%;
 	display: table;
-	border-top: groove 1px;
-	border-bottom: groove 1px;
 }
 
 .overview .teamTag {
 	float: left;
-	width:14.8%;
+	width:15%;
 	display: table-cell;
 	vertical-align: middle;
 }
 
 .overview .teamWin {
 	float: left;
-	width:28.4%;
+	width:28%;
 	display: table-cell;
 	vertical-align: middle;
 }
@@ -259,45 +245,22 @@ banpick hr {
 
 .overview .teamSpace {
 	float: left;
-	width:31.26%;
+	width:31.4%;
 	height:100%;
 }
 
 .overview .teamGold {
 	float: left;
 	width:13.2%;
-}	
-
-.overview .teamTag {
-	border-left: groove 1px;
-	border-right: groove 1px;	
-}
-
-.overview .teamKDA {
-	border-left: groove 1px;
-	border-right: groove 1px;	
-}
-
-.overview .teamGold {
-	border-left: groove 1px;
-}
-
-.overview .redScoreBoard .teamGold {
-	border-right: groove 1px;
 }
 
 .overview .redScoreBoard .teamSpace {
 	width:31.2%;
 }
 
-.overview .redScoreBoard .teamWin {
-	width:28.3%;
-}
-
 /*
 // Player
 */
-
 .overview .players {
 	float:left;
 	width:100%;
@@ -305,7 +268,7 @@ banpick hr {
 }
 
 .overview .player {
-	height:19.3%;
+	height:19.8%;
 }
 
 .overview .champion {
@@ -322,8 +285,8 @@ banpick hr {
 }
 
 .overview .champion img {
-	width:100%;
-	height:100%;
+	widows: 64px;
+	height:64px;
 }
 
 .overview .champion p {
@@ -349,14 +312,14 @@ banpick hr {
 	height:50%;
 }
 
-.overview .spell img{
+.overview .spell img {
 	width:100%;
 	height:100%;
 }
 
 .overview .playerName {
 	float: left;
-	width:28.4%;
+	width:28%;
 	height:100%;
 	display: table;
 }
@@ -370,9 +333,7 @@ banpick hr {
 	float: left;
 	width:11.5%;
 	height:100%;
-	display: table;	
-	border-left: groove 1px;
-	border-right: groove 1px;
+	display: table;
 }
 
 .overview .kda p {
@@ -404,6 +365,10 @@ banpick hr {
 	display: table;
 }
 
+.overview .redScoreBoard .trinket {
+	width:4.9%;
+}
+
 .overview .trinketItem {
 	display: table-cell;
 	vertical-align: middle;
@@ -419,16 +384,11 @@ banpick hr {
 	width:13.2%;
 	height:100%;
 	display: table;
-	border-left: groove 1px;
 }
 
 .overview .cs p, .overview .gold p {
 	display: table-cell;
 	vertical-align: middle;
-}
-
-.overview .player {
-	border: groove 0px;
 }
 
 .overview section {
@@ -440,68 +400,73 @@ banpick hr {
 */
 .overview .team-ban-object {
 	float: left;
-	height : auto;
+	height : 14%;
 	width:100%;
 }
 
-
-.overview .blueScoreBoard .team-ban-object .bans{
+.overview .blueScoreBoard .team-ban-object .bans {
 	float: left;
 	height:100%;
 	width:50%;
 	display: table;
 }
 
-.overview .redScoreBoard .team-ban-object .bans{
+.overview .redScoreBoard .team-ban-object .bans {
 	float: left;
 	height:100%;
 	width:40%;
 	display: table;
 }
 
-.overview .blueScoreBoard .team-ban-object .object{
+.overview .team-ban-object .bans_txt {
+	display: table-cell;
+	vertical-align: middle;
+	width:10%;
+	height:100%;
+}
+
+.overview .team-ban-object .bans_img {
+	float: left;
+	height:100%;
+	display: table;
+}
+
+.overview .team-ban-object .center_img {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.overview .team-ban-object .bans_img img {
+	width:34px;
+	height:34px;
+}
+
+.overview .blueScoreBoard .team-ban-object .object {
 	float: left;
 	height:100%;
 	width:50%;
 	display: table;
 }
 
-.overview .redScoreBoard .team-ban-object .object{
+.overview .redScoreBoard .team-ban-object .object {
 	float: left;
 	height:100%;
 	width:60%;
 	display: table;
 }
 
-.overview .team-ban-object .bans_txt{
-	display: table-cell;
-	vertical-align: middle;
-	width:10%;
-}
-
-.overview .team-ban-object .bans_img{
-	float: left;
-}
-
-.overview .team-ban-object .bans_img img{
-	float: left;
-	width:34px;
-	height:34px;
-}
-
-
-.overview .team-ban-object .object_contents{
+.overview .team-ban-object .object_contents {
 	float: left;
 	display: table;
+	height:100%;
 }
 
-.overview .team-ban-object .object .object_canvas{
-	float: left;
+.overview .team-ban-object .object .object_canvas {
 	width:34px;
 	height:34px;
 }
 
-.overview .team-ban-object .object .object_txt{
+.overview .team-ban-object .object .object_txt {
 	display: table-cell;
 	vertical-align: middle;
 	width:25px;
@@ -510,6 +475,45 @@ banpick hr {
 /* 
 // Line
 */
+.overview .blueScoreBoard, .overview .redScoreBoard {
+	border-top: groove 1px;
+	border-bottom: groove 1px;
+	border-left: groove 1px;
+}
+
+.overview .redScoreBoard {
+	border-right: groove 1px;
+}
+
+.overview .team-header {
+	border-bottom: groove 1px;
+}
+
+.overview .blueScoreBoard .teamTag {
+	border-right: groove 1px;	
+}
+
+.overview .redScoreBoard .teamTag {
+	border-left: groove 1px;	
+}
+
+.overview .teamKDA {
+	border-left: groove 1px;
+	border-right: groove 1px;	
+}
+
+.overview .blueScoreBoard .teamGold {
+	border-left: groove 1px;
+}
+
+.overview .redScoreBoard .teamGold {
+	border-right: groove 1px;
+}
+
+.overview .player {
+	border-bottom: groove 1px;
+}
+
 .overview .blueScoreBoard .playerName {
 	border-left: groove 1px;
 }
@@ -522,10 +526,11 @@ banpick hr {
 	border-left: groove 1px;
 }
 
-.overview .redScoreBoard .trinket {
-	width:4.9%;
+.overview .kda {
+	border-left: groove 1px;
+	border-right: groove 1px;
 }
 
-.overview .player {
-	border-bottom: groove 1px;	
+.overview .cs, .overview .blueScoreBoard .gold {
+	border-left: groove 1px;
 }

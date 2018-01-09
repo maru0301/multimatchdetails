@@ -241,7 +241,17 @@ class OverView {
 			champImg.innerHTML = tag.join("");
 
 			champ.appendChild(champImg);
+
+			let spells = document.createElement("div");
+			spells.className = "spells";
+
+			let spell =  document.createElement("div");
+			spell.className = "spell";
+			champImg.innerHTML = tag.join("");
+
 			player.appendChild(champ);
+			player.appendChild(spells);
+
 			Target.appendChild(player);
 		}
 	}

@@ -9,7 +9,7 @@ class MatchDetail {
 		this.ERROR_ID_VERSION_GET_ERROR 		= "サーバーバージョン情報が取得出来ませんでした";
 		this.ERROR_ID_REALM_GET_ERROR 			= "バージョン情報が取得出来ませんでした";
 		this.ERROR_ID_CHAMPION_IMG_GET_ERROR 	= "チャンピオンイメージ情報が取得出来ませんでした";
-		this.ERROR_ID_SUMMONER_SPELL_GET_ERROR 	= "チーム情報が取得出来ませんでした";
+		this.ERROR_ID_SUMMONER_SPELL_GET_ERROR 	= "サモナースペル情報が取得出来ませんでした";
 		this.ERROR_ID_ITEM_IMG_GET_ERROR 		= "アイテムイメージ情報が取得出来ませんでした";
 		this.ERROR_ID_TEAM_GET_ERROR 			= "チーム情報が取得出来ませんでした";
 		this.ERROR_ID_MASTERY_IMG_GET_ERROR 	= "マスタリーイメージ情報が取得出来ませんでした";
@@ -23,7 +23,8 @@ class MatchDetail {
 		this.JSON_DATA_TIMELINE = {};
 		this.JSON_DATA_CHAMP_IMG = new Array();
 		this.JSON_DATA_ITEM_IMG = new Array();
-
+		this.JSON_DATA_SPELLS = new Array();
+		
 		this.TEAM_TAG = [ "blue", "red" ];
 
 		this.TIMELINE_WORK_DATA = {};
@@ -270,6 +271,7 @@ class MatchDetail {
 			{ error_id: this.ERROR_ID_CHAMPION_IMG_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage" },  },
 			{ error_id: this.ERROR_ID_ITEM_IMG_GET_ERROR,		url: './php/main.php', data: { func:"GetItem" },  },
 			{ error_id: this.ERROR_ID_REALM_GET_ERROR,			url: './php/main.php', data: { func:"GetRealms" },  },
+			{ error_id: this.ERROR_ID_SUMMONER_SPELL_GET_ERROR,	url: './php/main.php', data: { func:"GetSpells" },  },
 		];
 
 		var jqXHRList = [];
@@ -302,6 +304,7 @@ class MatchDetail {
 			var championImgJson = json[0];
 			var itemImgJson = json[1];
 			var realmsJson = json[2];
+			let spellsJson = json[3];
 
 			// Champion
 			var championImgData = new Array();
@@ -312,6 +315,10 @@ class MatchDetail {
 			
 			// Realms
 			self.VERSION = realmsJson.v;
+
+			// Spells
+			for(var key in spellsJson.data)
+				self.JSON_DATA_SPELLS.push(spellsJson.data[key]);
 
 			// Item
 			//for(var key in itemImgJson.data)

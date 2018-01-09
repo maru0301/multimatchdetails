@@ -66,6 +66,13 @@ class RiotApi
 		
 		return $json;
 	}
+
+	public function GetSpells()
+	{
+		$json = file_get_contents('../data/json/summoner-spells.json');
+		
+		return $json;
+	}
 }
 
 //-------------------------------------------------
@@ -78,6 +85,7 @@ $func_tbl = array(
 			"GetChampionImage" => "GetChampionImage",
 			"GetItem" => "GetItem",
 			"GetRealms" => "GetRealms",
+			"GetSpells" => "GetSpells",
 );
 
 //-------------------------------------------------

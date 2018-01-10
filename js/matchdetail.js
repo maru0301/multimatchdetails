@@ -2,8 +2,12 @@
 // MatchDetail Class
 ////////////////////////////////////////////////////////////////////////////////////
 
-class MatchDetail {
-
+class MatchDetail
+{
+	////////////////////////////////////////////////////////////////////////////////////
+	// constructor
+	////////////////////////////////////////////////////////////////////////////////////
+	
 	constructor()
 	{
 		this.ERROR_ID_VERSION_GET_ERROR 		= "サーバーバージョン情報が取得出来ませんでした";
@@ -25,7 +29,7 @@ class MatchDetail {
 		this.JSON_DATA_ITEM_IMG = new Array();
 		this.JSON_DATA_SPELLS = new Array();
 		
-		this.TEAM_TAG = [ "blue", "red" ];
+		this.TEAM_TAG = ["blue", "red"];
 
 		this.TIMELINE_WORK_DATA = {};
 		this.VISION_WARD_ID = new Array();
@@ -34,14 +38,19 @@ class MatchDetail {
 		this.isShow = false;
 		this.isEndFrame = false;
 
-		this.TEAM_NAME = [ "Blue", "Red" ];
+		this.TEAM_NAME = ["Blue", "Red"];
 
 		this.MATCHLIST = new Array();
+
+		this.TEAM_ID_BLUE = 100;
+		this.TEAM_ID_RED = 200;
+
+		this.TryCnt = 0;
 	}
 
 	CreateMatchListObject(num)
 	{
-		for(var i = 0 ; i < num ; ++i)
+		for(let i = 0 ; i < num ; ++i)
 		{
 			this.MATCHLIST[i] = {};
 			this.MATCHLIST[i].game = {};
@@ -76,17 +85,17 @@ class MatchDetail {
 	{
 		console.log(decodeURIComponent(url_data));
 
-		var data = url_data.split("data=")[1];
+		let data = url_data.split("data=")[1];
 		data = decodeURIComponent(data);
 
 		// size
-		var index = data.search("&");
-		var length = data.substr(0, index);
+		let index = data.search("&");
+		let length = data.substr(0, index);
 		// MatchListObject作成
 		this.CreateMatchListObject(length);
 
 		data = data.substr(index+1);
-		for(var i = 0 ; i < length ; ++i)
+		for(let i = 0 ; i < length ; ++i)
 		{
 			// GameRealm取得
 			index = data.search(",");
@@ -109,31 +118,31 @@ class MatchDetail {
 
 	ParseMatchDetailJson(JsonData)
 	{
-		var index = JsonData.index;
+		let index = JsonData.index;
 		// Game
 		this.MATCHLIST[index].game.gameVer = JsonData.gameVersion;
 
 		// Team
-		for(var j = 0 ; j < JsonData.teams.length ; ++j)
+		for(let j = 0 ; j < JsonData.teams.length ; ++j)
 		{
 			this.MATCHLIST[index].teams[j] = {};
 			this.MATCHLIST[index].teams[j].teamId = JsonData.teams[j].teamId;
 			this.MATCHLIST[index].teams[j].win = JsonData.teams[j].win == "Win" ? true : false;
 
 			// TeamTag
-			for(var k = 0 ; k < JsonData.participants.length ; ++k)
+			for(let k = 0 ; k < JsonData.participants.length ; ++k)
 			{
 				// TeamIDが同じか
 				if(this.MATCHLIST[index].teams[j].teamId == JsonData.participants[k].teamId)
 				{
-					var participantId = JsonData.participants[k].participantId;
+					let participantId = JsonData.participants[k].participantId;
 					// プレイヤーの名前を引っ張ってくる
-					for(var l = 0 ; l < JsonData.participantIdentities.length ; ++l)
+					for(let l = 0 ; l < JsonData.participantIdentities.length ; ++l)
 					{
 						if(participantId == JsonData.participantIdentities[l].participantId)
 						{
-							var tag = JsonData.participantIdentities[l].player.summonerName;
-							var tagindex = tag.search(" ");
+							let tag = JsonData.participantIdentities[l].player.summonerName;
+							let tagindex = tag.search(" ");
 							tag = tag.substr(0, tagindex);
 
 							this.MATCHLIST[index].teams[j].teamTag = tag;
@@ -145,7 +154,7 @@ class MatchDetail {
 
 			// Ban
 			this.MATCHLIST[index].teams[j].bans = new Array();
-			for(var k = 0 ; k < JsonData.teams[j].bans.length ; ++k)
+			for(let k = 0 ; k < JsonData.teams[j].bans.length ; ++k)
 			{
 				this.MATCHLIST[index].teams[j].bans[k] = {};
 				this.MATCHLIST[index].teams[j].bans[k].championId = JsonData.teams[j].bans[k].championId;
@@ -158,13 +167,14 @@ class MatchDetail {
 			this.MATCHLIST[index].teams[j].stats.dragonKills = JsonData.teams[j].dragonKills;
 			this.MATCHLIST[index].teams[j].stats.riftHeraldKills = JsonData.teams[j].riftHeraldKills;
 			this.MATCHLIST[index].teams[j].stats.towerKills = JsonData.teams[j].towerKills;
+			this.MATCHLIST[index].teams[j].stats.inhibitorKills = JsonData.teams[j].inhibitorKills;
 		}
 
 		// Player
-		for(var j = 0 ; j < this.MATCHLIST[index].teams.length ; ++j)
+		for(let j = 0 ; j < this.MATCHLIST[index].teams.length ; ++j)
 		{
-			var setIndex = 0;
-			for(var k = 0 ; k < JsonData.participants.length ; ++k)
+			let setIndex = 0;
+			for(let k = 0 ; k < JsonData.participants.length ; ++k)
 			{
 				if(this.MATCHLIST[index].teams[j].teamId == JsonData.participants[k].teamId)
 				{
@@ -180,11 +190,11 @@ class MatchDetail {
 			}
 		}
 		
-		for(var j = 0 ; j < this.MATCHLIST[index].teams.length ; ++j)
+		for(let j = 0 ; j < this.MATCHLIST[index].teams.length ; ++j)
 		{
-			for(var k = 0 ; k < this.MATCHLIST[index].teams[j].player.length ; ++k)
+			for(let k = 0 ; k < this.MATCHLIST[index].teams[j].player.length ; ++k)
 			{
-				for(var l = 0 ; l < JsonData.participantIdentities.length ; ++l)
+				for(let l = 0 ; l < JsonData.participantIdentities.length ; ++l)
 				{
 					if(this.MATCHLIST[index].teams[j].player[k].participantId == JsonData.participantIdentities[l].participantId)
 					{
@@ -203,10 +213,10 @@ class MatchDetail {
 
 	GetMatchDetailJson()
 	{
-		var self = this;
-		var jqXHRList = [];
+		let self = this;
+		let jqXHRList = [];
 
-		for(var i = 0 ; i < self.MATCHLIST.length ; ++i)
+		for(let i = 0 ; i < self.MATCHLIST.length ; ++i)
 		{
 			if(!self.MATCHLIST[i].isGetJson)
 			{
@@ -220,37 +230,38 @@ class MatchDetail {
 			}
 		}
 		
-		$.when.apply(null, jqXHRList).done(function ()
+		$.when.apply(null, jqXHRList).done(function()
 		{
-			var json = [];
-			var statuses = [];
-			var jqXHRResultList = [];
+			let json = [];
+			let statuses = [];
+			let jqXHRResultList = [];
 			
-			for( var i = 0, max = arguments.length ; i < max ; ++i )
+			for(let i = 0, max = arguments.length ; i < max ; ++i)
 			{
-				var result = arguments[i];
+				let result = arguments[i];
 				json.push(result[0]);
 				statuses.push(result[1]);
 				jqXHRResultList.push(result[3]);
 			}
 			
 			// Jsonパース
-			for(var i = 0 ; i < json.length ; ++i)
+			for(let i = 0 ; i < json.length ; ++i)
 				self.ParseMatchDetailJson(json[i]);
 
 			view.Init();
 		});
 		
-		$.when.apply(null, jqXHRList).fail(function ()
+		$.when.apply(null, jqXHRList).fail(function()
 		{
 			console.log("Fail : GetMatchDetailJson");
 			console.log(jqXHRList);
 
-			for( var i = 0 ; i < jqXHRList.length ; ++i )
+			for(let i = 0 ; i < jqXHRList.length ; ++i)
 			{
-				if( jqXHRList[i].statusText === "error" || jqXHRList[i].responseJSON === undefined)
+				if(jqXHRList[i].statusText === "error" || jqXHRList[i].responseJSON === undefined)
 				{
-					console.log("Fail index: " + i);
+					if(i !== undefined)
+						console.log("Fail index: " + i);
 				}
 				else
 				{
@@ -258,25 +269,36 @@ class MatchDetail {
 					self.ParseMatchDetailJson(jqXHRList[i].responseJSON);
 				}
 			}
-			// 1秒待つ
-			setTimeout(self.GetMatchDetailJson(), 1000);
+			if(self.TryCnt < 10)
+			{
+				// 何秒か待つ
+				setTimeout(function(){
+					self.GetMatchDetailJson();
+				}, 5000);
+
+				self.TryCnt++;
+			}
+			else
+			{
+				console.log("GetMatchDetailJson Try Max Failed");
+			}
 		});
 	}
 	
 	InitDataJson(matchDetailData, matchTimelineJson)
 	{
-		var self = this;
+		let self = this;
 
-		var request = [
+		let request = [
 			{ error_id: this.ERROR_ID_CHAMPION_IMG_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage" },  },
 			{ error_id: this.ERROR_ID_ITEM_IMG_GET_ERROR,		url: './php/main.php', data: { func:"GetItem" },  },
 			{ error_id: this.ERROR_ID_REALM_GET_ERROR,			url: './php/main.php', data: { func:"GetRealms" },  },
 			{ error_id: this.ERROR_ID_SUMMONER_SPELL_GET_ERROR,	url: './php/main.php', data: { func:"GetSpells" },  },
 		];
 
-		var jqXHRList = [];
+		let jqXHRList = [];
 
-		for( var i = 0, max = request.length ; i < max ; ++i )
+		for(let i = 0, max = request.length ; i < max ; ++i)
 		{
 			jqXHRList.push($.ajax(
 			{
@@ -289,35 +311,35 @@ class MatchDetail {
 
 		$.when.apply(null, jqXHRList).done(function ()
 		{
-			var json = [];
-			var statuses = [];
-			var jqXHRResultList = [];
+			let json = [];
+			let statuses = [];
+			let jqXHRResultList = [];
 			
-			for( var i = 0, max = arguments.length ; i < max ; ++i )
+			for(let i = 0, max = arguments.length ; i < max ; ++i)
 			{
-				var result = arguments[i];
+				let result = arguments[i];
 				json.push(result[0]);
 				statuses.push(result[1]);
 				jqXHRResultList.push(result[3]);
 			}
 
-			var championImgJson = json[0];
-			var itemImgJson = json[1];
-			var realmsJson = json[2];
+			let championImgJson = json[0];
+			let itemImgJson = json[1];
+			let realmsJson = json[2];
 			let spellsJson = json[3];
 
 			// Champion
-			var championImgData = new Array();
+			let championImgData = new Array();
 //			var itemImgImgData = new Array();
 			
-			for(var key in championImgJson.data)
+			for(let key in championImgJson.data)
 				self.JSON_DATA_CHAMP_IMG.push(championImgJson.data[key]);
 			
 			// Realms
 			self.VERSION = realmsJson.v;
 
 			// Spells
-			for(var key in spellsJson.data)
+			for(let key in spellsJson.data)
 				self.JSON_DATA_SPELLS.push(spellsJson.data[key]);
 
 			// Item
@@ -328,9 +350,9 @@ class MatchDetail {
 			// Champion
 			self.JSON_DATA_CHAMP_IMG.sort(function(a, b)
 			{
-					if(a.key < b.key) return -1;
-					if(a.key > b.key) return 1;
-					if(a.key == b.key) return 0;
+				if(a.key < b.key) return -1;
+				if(a.key > b.key) return 1;
+				if(a.key == b.key) return 0;
 			});
 /*
 			var isSet = false;
@@ -360,9 +382,9 @@ class MatchDetail {
 			console.log("Fail : InitTimeLine");
 			console.log(jqXHRList);
 
-			for( var i = 0 ; i < jqXHRList.length ; ++i )
+			for(let i = 0 ; i < jqXHRList.length ; ++i)
 			{
-				if( jqXHRList[i].statusText === "error" )
+				if(jqXHRList[i].statusText === "error")
 				{
 					console.log(request[i].error_id);
 				}
@@ -376,36 +398,53 @@ class MatchDetail {
 
 	Init(href_url)
 	{
-
 		this.ParseURLData(href_url);
 
 		this.InitDataJson();
 	}
 
-
 	////////////////////////////////////////////////////////////////////////////////////
 
 	GetChampionImgName(id)
 	{
-		for( var i = 0 ; i < this.JSON_DATA_CHAMP_IMG.length ; ++i )
+		for(let i = 0 ; i < this.JSON_DATA_CHAMP_IMG.length ; ++i)
 		{
-			if ( id == this.JSON_DATA_CHAMP_IMG[i].id )
+			if(id == this.JSON_DATA_CHAMP_IMG[i].id)
 				return this.JSON_DATA_CHAMP_IMG[i].image.full;
 		}
 	}
 
 	GetChampionName(id)
 	{
-		for( var i = 0 ; i < this.JSON_DATA_CHAMP_IMG.length ; ++i )
+		for(let i = 0 ; i < this.JSON_DATA_CHAMP_IMG.length ; ++i)
 		{
-			if ( id == this.JSON_DATA_CHAMP_IMG[i].id )
+			if(id == this.JSON_DATA_CHAMP_IMG[i].id)
 				return this.JSON_DATA_CHAMP_IMG[i].name;
 		}
+	}
+
+	GetSpellImgName(id)
+	{
+		for(let i = 0 ; i < this.JSON_DATA_SPELLS.length ; ++i)
+		{
+			if(id == this.JSON_DATA_SPELLS[i].id)
+			{
+				return this.JSON_DATA_SPELLS[i].image.full;
+			}
+		}
+	}
+
+	GetGoldReplaceKilo(num)
+	{		
+		let gold = Math.round(num / 100);
+		gold /= 10;
+
+		return `${gold}k`;
 	}
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-var matchdetail = new MatchDetail();
+const matchdetail = new MatchDetail();
 matchdetail.Init(location.href);

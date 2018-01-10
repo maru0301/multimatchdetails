@@ -7,7 +7,6 @@ class MatchDetail
 	////////////////////////////////////////////////////////////////////////////////////
 	// constructor
 	////////////////////////////////////////////////////////////////////////////////////
-	
 	constructor()
 	{
 		this.ERROR_ID_VERSION_GET_ERROR 		= "サーバーバージョン情報が取得出来ませんでした";
@@ -243,12 +242,27 @@ class MatchDetail
 				statuses.push(result[1]);
 				jqXHRResultList.push(result[3]);
 			}
+
+			let isRetry = false;
 			
 			// Jsonパース
 			for(let i = 0 ; i < json.length ; ++i)
-				self.ParseMatchDetailJson(json[i]);
+			{
+				if(json[i] !== null)
+				{
+					self.ParseMatchDetailJson(json[i]);
+				}
+				else
+				{
+					// doneだけどJsonデータがnullの時があるので再度リトライする
+					isRetry = true;
+				}
+			}
 
-			view.Init();
+			if(!isRetry)
+				view.Init();
+			else
+				self.RetryGetMatchDetailJson();
 		});
 		
 		$.when.apply(null, jqXHRList).fail(function()
@@ -269,19 +283,8 @@ class MatchDetail
 					self.ParseMatchDetailJson(jqXHRList[i].responseJSON);
 				}
 			}
-			if(self.TryCnt < 10)
-			{
-				// 何秒か待つ
-				setTimeout(function(){
-					self.GetMatchDetailJson();
-				}, 5000);
 
-				self.TryCnt++;
-			}
-			else
-			{
-				console.log("GetMatchDetailJson Try Max Failed");
-			}
+			self.RetryGetMatchDetailJson();
 		});
 	}
 	
@@ -441,8 +444,27 @@ class MatchDetail
 
 		return `${gold}k`;
 	}
-}
 
+	////////////////////////////////////////////////////////////////////////////////////
+
+	RetryGetMatchDetailJson()
+	{
+		if(this.TryCnt < 10)
+		{
+			let self = this;
+			// 何秒か待つ
+			setTimeout(function(){
+				self.GetMatchDetailJson();
+			}, 5000);
+
+			self.TryCnt++;
+		}
+		else
+		{
+			console.log("GetMatchDetailJson Try Max Failed");
+		}
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////////
 

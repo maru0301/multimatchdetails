@@ -52,7 +52,15 @@ class OverView
 				Match[i].teams[j] = {};
 
 				Match[i].teams[j].teamId = matchdetail.MATCHLIST[i].teams[j].teamId;
-				Match[i].teams[j].teamTag = matchdetail.MATCHLIST[i].teams[j].teamTag;
+				if(matchdetail.MATCHLIST[i].teams[j].teamTag)
+				{
+					Match[i].teams[j].teamTag = matchdetail.MATCHLIST[i].teams[j].teamTag;
+				}
+				else
+				{
+					Match[i].teams[j].teamTag = Match[i].teams[j].teamId == matchdetail.TEAM_ID_BLUE ? "Blue" : "Red";
+				}
+
 				Match[i].teams[j].win = matchdetail.MATCHLIST[i].teams[j].win;
 
 				// Stats
@@ -92,10 +100,12 @@ class OverView
 			newSectionTag.className = `match${i+1}` 
 			let newHeaderTag = document.createElement("h1");
 			let verTag = document.createElement("p");
-			verTag.className = `gameversion` 
-			verTag.innerHTML = `GameVersion : ${CommonData[i].gameVer}`;
 			
 			newHeaderTag.innerHTML = `Match${i+1}`;
+
+			verTag.className = `gameversion`;
+			const url = `${matchdetail.MATCHLIST[i].game.gameRealm}/${matchdetail.MATCHLIST[i].game.gameId}?gameHash=${matchdetail.MATCHLIST[i].game.gameHash}`;
+			verTag.innerHTML = `GameVersion : ${CommonData[i].gameVer}&nbsp;&nbsp;&nbsp;<a target="_blank" href="https://matchhistory.na.leagueoflegends.com/en/#match-details/${url}">URL</a>`;
 
 			newSectionTag.appendChild(newHeaderTag);
 			newSectionTag.appendChild(verTag);
@@ -224,7 +234,7 @@ class OverView
 			//Spell
 			for(let j = 0 ; j < Data.player[i].spells.length ; ++j)
 			{
-				let spell =  document.createElement("div");
+				let spell = document.createElement("div");
 				let spell_img = matchdetail.GetSpellImgName(Data.player[i].spells[j]);
 				spell.className = "spell";
 				spell.innerHTML = `<img src="${matchdetail.CDN_URL}/${matchdetail.VERSION}/img/spell/${spell_img}">`;
@@ -232,10 +242,40 @@ class OverView
 				spells.appendChild(spell);
 			}
 
+			// Perks
+			let perks = document.createElement("div");
+			perks.className = "perks";
+
+			let isPerks = false;
+
+			if(Data.player[i].stats.perk0 != undefined)
+			{
+				let perkIds = [
+					Data.player[i].stats.perk0, Data.player[i].stats.perk1, Data.player[i].stats.perk2,
+					Data.player[i].stats.perk3, Data.player[i].stats.perk4, Data.player[i].stats.perk5,
+				];
+
+				for(let j = 0 ; j < perkIds.length ; ++j)
+				{
+					let perk = document.createElement("div");
+					perk.className = "perk";
+					if(perkIds[j] !== undefined && perkIds[j] !== 0)
+						perk.innerHTML = `<img src="./data/img/perk/${perkIds[j]}.png">`;
+					
+					perks.appendChild(perk);
+				}
+
+				isPerks = true;
+			}
+
 			// Name
 			let playerName = document.createElement("div");
 			playerName.className = "playerName";
 			playerName.innerHTML = `<p class="Name">${Data.player[i].name}</p>`;
+			if(isPerks)
+			{
+				playerName.className = "perksPlayerName";
+			}
 
 			// KDA
 			let kda = document.createElement("div");
@@ -288,6 +328,10 @@ class OverView
 				// Blue
 				player.appendChild(champ);
 				player.appendChild(spells);
+				
+				if(isPerks)
+					player.appendChild(perks);
+				
 				player.appendChild(playerName);
 				player.appendChild(kda);
 				player.appendChild(items);
@@ -304,8 +348,12 @@ class OverView
 				player.appendChild(trinket);
 				player.appendChild(kda);
 				player.appendChild(playerName);
-				player.appendChild(champ);
+				
+				if(isPerks)
+					player.appendChild(perks);
+				
 				player.appendChild(spells);
+				player.appendChild(champ);
 			}
 			
 			Target.appendChild(player);

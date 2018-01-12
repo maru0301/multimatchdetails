@@ -226,6 +226,7 @@ banpick hr {
 	float: left;
 	width:600px;
 	height:400px;
+	font-size:14px;
 }
 
 /*
@@ -423,6 +424,40 @@ banpick hr {
 	height : auto;
 }
 
+.overview .perks {
+	float: left;
+	width:13%;
+	height:100%;
+}
+
+.overview .perk {
+	float: left;
+	width:25%;
+	height:50%;
+}
+
+.overview .perks img {
+	width:100%;
+	height:80%;
+}
+
+.overview .perksPlayerName {
+	float: left;
+	width:15%;
+	height:100%;
+	display: table;
+	font-size:11px;
+}
+
+.overview .redScoreBoard .perksPlayerName {
+	width:15.5%;
+}
+
+.overview .perksPlayerName p {
+	display: table-cell;
+	vertical-align: middle;
+}
+
 /*
 // Bans Object
 */
@@ -547,11 +582,11 @@ banpick hr {
 	border-bottom: groove 1px;
 }
 
-.overview .blueScoreBoard .playerName {
+.overview .blueScoreBoard .playerName, .overview .blueScoreBoard .perksPlayerName{
 	border-left: groove 1px;
 }
 
-.overview .redScoreBoard .playerName {
+.overview .redScoreBoard .playerName, .overview .redScoreBoard .perksPlayerName {
 	border-right: groove 1px;
 }
 

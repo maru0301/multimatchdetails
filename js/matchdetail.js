@@ -449,13 +449,13 @@ class MatchDetail
 
 	RetryGetMatchDetailJson()
 	{
-		if(this.TryCnt < 10)
+		if(this.TryCnt < 40)
 		{
 			let self = this;
 			// 何秒か待つ
 			setTimeout(function(){
 				self.GetMatchDetailJson();
-			}, 5000);
+			}, 10000);
 
 			self.TryCnt++;
 		}

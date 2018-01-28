@@ -213,79 +213,101 @@ class MatchDetail
 	GetMatchDetailJson()
 	{
 		let self = this;
-		let jqXHRList = [];
 
-		for(let i = 0 ; i < self.MATCHLIST.length ; ++i)
+		if(self.MATCHLIST.length > 1)
 		{
-			if(!self.MATCHLIST[i].isGetJson)
-			{
-				jqXHRList.push($.ajax(
-				{
-					url: './php/main.php',
-					type: 'GET',
-					dataType: 'json',
-					data: { func:"GetMatchDetails", realm:self.MATCHLIST[i].game.gameRealm, id:self.MATCHLIST[i].game.gameId, hash:self.MATCHLIST[i].game.gameHash, index:i }
-				}));
-			}
-		}
-		
-		$.when.apply(null, jqXHRList).done(function()
-		{
-			let json = [];
-			let statuses = [];
-			let jqXHRResultList = [];
-			
-			for(let i = 0, max = arguments.length ; i < max ; ++i)
-			{
-				let result = arguments[i];
-				json.push(result[0]);
-				statuses.push(result[1]);
-				jqXHRResultList.push(result[3]);
-			}
+			let jqXHRList = [];
 
-			let isRetry = false;
-			
-			// Jsonパース
-			for(let i = 0 ; i < json.length ; ++i)
+			for(let i = 0 ; i < self.MATCHLIST.length ; ++i)
 			{
-				if(json[i] !== null)
+				if(!self.MATCHLIST[i].isGetJson)
 				{
-					self.ParseMatchDetailJson(json[i]);
+					jqXHRList.push($.ajax(
+					{
+						url: './php/main.php',
+						type: 'GET',
+						dataType: 'json',
+						data: { func:"GetMatchDetails", realm:self.MATCHLIST[i].game.gameRealm, id:self.MATCHLIST[i].game.gameId, hash:self.MATCHLIST[i].game.gameHash, index:i }
+					}));
 				}
+			}
+			
+			$.when.apply(null, jqXHRList).done(function()
+			{
+				let json = [];
+				let statuses = [];
+				let jqXHRResultList = [];
+				
+				for(let i = 0, max = arguments.length ; i < max ; ++i)
+				{
+					let result = arguments[i];
+					json.push(result[0]);
+					statuses.push(result[1]);
+					jqXHRResultList.push(result[3]);
+				}
+
+				let isRetry = false;
+				
+				// Jsonパース
+				for(let i = 0 ; i < json.length ; ++i)
+				{
+					if(json[i] !== null)
+					{
+						self.ParseMatchDetailJson(json[i]);
+					}
+					else
+					{
+						// doneだけどJsonデータがnullの時があるので再度リトライする
+						isRetry = true;
+					}
+				}
+
+				if(!isRetry)
+					view.Init();
 				else
-				{
-					// doneだけどJsonデータがnullの時があるので再度リトライする
-					isRetry = true;
-				}
-			}
+					self.RetryGetMatchDetailJson();
+			});
+			
+			$.when.apply(null, jqXHRList).fail(function()
+			{
+				console.log("Fail : GetMatchDetailJson");
+				console.log(jqXHRList);
 
-			if(!isRetry)
-				view.Init();
-			else
+				for(let i = 0 ; i < jqXHRList.length ; ++i)
+				{
+					if(jqXHRList[i].statusText === "error" || jqXHRList[i].responseJSON === undefined)
+					{
+						if(i !== undefined)
+							console.log("Fail index: " + i);
+					}
+					else
+					{
+						// 成功した物は保存
+						self.ParseMatchDetailJson(jqXHRList[i].responseJSON);
+					}
+				}
+
 				self.RetryGetMatchDetailJson();
-		});
-		
-		$.when.apply(null, jqXHRList).fail(function()
+			});
+		}
+		else
 		{
-			console.log("Fail : GetMatchDetailJson");
-			console.log(jqXHRList);
-
-			for(let i = 0 ; i < jqXHRList.length ; ++i)
+			$.ajax({
+				url: './php/main.php',
+				type: 'GET',
+				dataType: 'json',
+				data: { func:"GetMatchDetails", realm:self.MATCHLIST[0].game.gameRealm, id:self.MATCHLIST[0].game.gameId, hash:self.MATCHLIST[0].game.gameHash, index:0 }
+			})
+			.done(function(data)
 			{
-				if(jqXHRList[i].statusText === "error" || jqXHRList[i].responseJSON === undefined)
-				{
-					if(i !== undefined)
-						console.log("Fail index: " + i);
-				}
-				else
-				{
-					// 成功した物は保存
-					self.ParseMatchDetailJson(jqXHRList[i].responseJSON);
-				}
-			}
-
-			self.RetryGetMatchDetailJson();
-		});
+				self.ParseMatchDetailJson(data);
+				view.Init();
+			})
+			.fail(function()
+			{
+				self.RetryGetMatchDetailJson();
+			});
+		}
 	}
 	
 	InitDataJson(matchDetailData, matchTimelineJson)

@@ -46,6 +46,7 @@ class OverView
 			Match[i] = {};
 			Match[i].teams = new Array();
 			Match[i].gameVer = matchdetail.MATCHLIST[i].game.gameVer;
+			Match[i].cdnVer = matchdetail.MATCHLIST[i].cdnVer;
 
 			for(let j = 0 ; j < matchdetail.MATCHLIST[i].teams.length ; ++j)
 			{
@@ -126,7 +127,7 @@ class OverView
 			target.appendChild(scoreTag);
 
 			this.ShowTeamHeader(CommonData.teams[i], scoreTag, scoreTag.className);
-			this.ShowPlayers(CommonData.teams[i], scoreTag, scoreTag.className);
+			this.ShowPlayers(CommonData.teams[i], CommonData.cdnVer, scoreTag, scoreTag.className);
 			this.ShowTeamBanObject(CommonData.teams[i], TargetMatchClassName, scoreTag, scoreTag.className);
 		}
 	}
@@ -198,7 +199,7 @@ class OverView
 		}
 	}
 
-	ShowPlayers(Data, Target, TargetClassName)
+	ShowPlayers(Data, cdnVer, Target, TargetClassName)
 	{
 		let playersTag = document.createElement("div");
 		playersTag.className = "players";
@@ -297,7 +298,7 @@ class OverView
 				let item = document.createElement("div");
 				item.className = "item";
 				if(itemId[j] !== undefined && itemId[j] !== 0)
-					item.innerHTML = `<img src="${matchdetail.CDN_URL}/${matchdetail.VERSION}/img/item/${itemId[j]}.png">`;
+					item.innerHTML = `<img src="${matchdetail.CDN_URL}/${cdnVer}/img/item/${itemId[j]}.png">`;
 				
 				items.appendChild(item);
 			}
@@ -310,7 +311,7 @@ class OverView
 			trinketItem.className = "trinketItem";
 			const trinketItemId = Data.player[i].stats.item6;
 			if(trinketItemId !== undefined && trinketItemId !== 0)
-				trinketItem.innerHTML = `<img src="${matchdetail.CDN_URL}/${matchdetail.VERSION}/img/item/${trinketItemId}.png">`;
+				trinketItem.innerHTML = `<img src="${matchdetail.CDN_URL}/${cdnVer}/img/item/${trinketItemId}.png">`;
 			trinket.appendChild(trinketItem);
 
 			// CS

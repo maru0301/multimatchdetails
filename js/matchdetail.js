@@ -45,6 +45,7 @@ class MatchDetail
 		this.TEAM_ID_RED = 200;
 
 		this.TryCnt = 0;
+		this.TimelineTryCnt = 0;
 	}
 
 	CreateMatchListObject(num)
@@ -58,9 +59,13 @@ class MatchDetail
 			this.MATCHLIST[i].game.gameHash = "";
 
 			this.MATCHLIST[i].game.gameVer = "";
+			this.MATCHLIST[i].cdnVer = "";
 
 			this.MATCHLIST[i].teams = new Array();
 			this.MATCHLIST[i].isGetJson = false;
+
+			this.MATCHLIST[i].timeline = new Array();
+			this.MATCHLIST[i].isGetTimelineJson = false;
 		}
 	}
 	
@@ -117,10 +122,13 @@ class MatchDetail
 
 	ParseMatchDetailJson(JsonData)
 	{
+		this.RemakeGame(JsonData);
+
 		let index = JsonData.index;
 		// Game
 		this.MATCHLIST[index].game.gameVer = JsonData.gameVersion;
-
+		// CDN Ver
+		this.MATCHLIST[index].cdnVer = this.GetVersion(this.MATCHLIST[index].game.gameVer, this.VERSIONS);
 		// Team
 		for(let j = 0 ; j < JsonData.teams.length ; ++j)
 		{
@@ -263,7 +271,7 @@ class MatchDetail
 				}
 
 				if(!isRetry)
-					view.Init();
+					self.GetMatchDetailTimelineJson();
 				else
 					self.RetryGetMatchDetailJson();
 			});
@@ -301,7 +309,7 @@ class MatchDetail
 			.done(function(data)
 			{
 				self.ParseMatchDetailJson(data);
-				view.Init();
+				self.GetMatchDetailTimelineJson();
 			})
 			.fail(function()
 			{
@@ -319,6 +327,7 @@ class MatchDetail
 			{ error_id: this.ERROR_ID_ITEM_IMG_GET_ERROR,		url: './php/main.php', data: { func:"GetItem" },  },
 			{ error_id: this.ERROR_ID_REALM_GET_ERROR,			url: './php/main.php', data: { func:"GetRealms" },  },
 			{ error_id: this.ERROR_ID_SUMMONER_SPELL_GET_ERROR,	url: './php/main.php', data: { func:"GetSpells" },  },
+			{ error_id: this.ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersions" },  },
 		];
 
 		let jqXHRList = [];
@@ -352,6 +361,7 @@ class MatchDetail
 			let itemImgJson = json[1];
 			let realmsJson = json[2];
 			let spellsJson = json[3];
+			let versionsJson = json[4];
 
 			// Champion
 			let championImgData = new Array();
@@ -367,6 +377,9 @@ class MatchDetail
 			for(let key in spellsJson.data)
 				self.JSON_DATA_SPELLS.push(spellsJson.data[key]);
 
+			// Versions
+			self.VERSIONS = versionsJson;
+
 			// Item
 			//for(var key in itemImgJson.data)
 			//	itemImgImgData[key] = itemImgJson.data[key];
@@ -379,6 +392,7 @@ class MatchDetail
 				if(a.key > b.key) return 1;
 				if(a.key == b.key) return 0;
 			});
+
 /*
 			var isSet = false;
 			for(var key in itemImgImgData )
@@ -417,6 +431,110 @@ class MatchDetail
 		});
 	}
 
+	GetMatchDetailTimelineJson()
+	{
+		let self = this;
+
+		if(self.MATCHLIST.length > 1)
+		{
+			let jqXHRList = [];
+
+			for(let i = 0 ; i < self.MATCHLIST.length ; ++i)
+			{
+				if(!self.MATCHLIST[i].isGetTimelineJson)
+				{
+					jqXHRList.push($.ajax(
+					{
+						url: './php/main.php',
+						type: 'GET',
+						dataType: 'json',
+						data: { func:"GetMatchTimeline", realm:self.MATCHLIST[i].game.gameRealm, id:self.MATCHLIST[i].game.gameId, hash:self.MATCHLIST[i].game.gameHash, index:i }
+					}));
+				}
+			}
+			
+			$.when.apply(null, jqXHRList).done(function()
+			{
+				let json = [];
+				let statuses = [];
+				let jqXHRResultList = [];
+				
+				for(let i = 0, max = arguments.length ; i < max ; ++i)
+				{
+					let result = arguments[i];
+					json.push(result[0]);
+					statuses.push(result[1]);
+					jqXHRResultList.push(result[3]);
+				}
+
+				let isRetry = false;
+				
+				// Jsonパース
+				for(let i = 0 ; i < json.length ; ++i)
+				{
+					if(json[i] !== null)
+					{
+//						self.ParseMatchDetailJson(json[i]);
+						self.MATCHLIST[i].isGetTimelineJson = true;
+					}
+					else
+					{
+						// doneだけどJsonデータがnullの時があるので再度リトライする
+						isRetry = true;
+					}
+				}
+
+				if(!isRetry)
+					view.Init();
+				else
+					self.RetryGetMatchTimelineJson();
+			});
+			
+			$.when.apply(null, jqXHRList).fail(function()
+			{
+				console.log("Fail : GetMatchTimelineJson");
+				console.log(jqXHRList);
+
+				for(let i = 0 ; i < jqXHRList.length ; ++i)
+				{
+					if(jqXHRList[i].statusText === "error" || jqXHRList[i].responseJSON === undefined)
+					{
+						if(i !== undefined)
+							console.log("Fail index: " + i);
+					}
+					else
+					{
+						// 成功した物は保存
+//						self.ParseMatchDetailJson(jqXHRList[i].responseJSON);
+						self.MATCHLIST[i].isGetTimelineJson = true;
+					}
+				}
+
+				self.RetryGetMatchTimelineJson();
+			});
+		}
+		else
+		{
+			$.ajax({
+				url: './php/main.php',
+				type: 'GET',
+				dataType: 'json',
+				data: { func:"GetMatchTimeline", realm:self.MATCHLIST[0].game.gameRealm, id:self.MATCHLIST[0].game.gameId, hash:self.MATCHLIST[0].game.gameHash, index:0 }
+			})
+			.done(function(data)
+			{
+				console.log(data);
+//				self.ParseMatchDetailJson(data);
+				view.Init();
+			})
+			.fail(function()
+			{
+				console.log("Fail : GetMatchTimelineJson");
+				self.RetryGetMatchTimelineJson();
+			});
+		}
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////
 	// Init
 	////////////////////////////////////////////////////////////////////////////////////
@@ -467,6 +585,55 @@ class MatchDetail
 		return `${gold}k`;
 	}
 
+	GetVersion(ver, json)
+	{
+		let version = ver;
+
+		if(version == undefined)
+			return json[0];
+
+		while(1)
+		{
+			for(let i = 0 ; i < json.length ; ++i)
+			{
+				if(version.indexOf(json[i]) !== -1)
+					return json[i];
+			}
+
+			if(version.length-1 > 0)
+			{
+				version = version.substr(0, version.length-1);
+			}
+			else
+			{
+				version = ver;
+				while(1)
+				{
+					let index = version.search(".");
+					let diff = index+2;
+					version = version.substr(index+2, version.length);
+					index = version.search(".")+1;
+					version = ver.substr(0, diff+index);
+
+					for(let i = 0 ; i < json.length ; ++i)
+					{
+						let jsonVer = json[i];
+						index = jsonVer.search(".");
+						diff = index+2;
+						jsonVer = jsonVer.substr(index+2, jsonVer.length);
+						index = jsonVer.search(".")+1;
+						jsonVer = json[i].substr(0, diff+index);
+
+						if(version.indexOf(jsonVer) !== -1)
+							return json[i];
+					}
+					
+					return json[0];
+				}
+			}
+		}
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////
 
 	RetryGetMatchDetailJson()
@@ -484,6 +651,39 @@ class MatchDetail
 		else
 		{
 			console.log("GetMatchDetailJson Try Max Failed");
+		}
+	}
+
+	RetryGetMatchTimelineJson()
+	{
+		if(this.TimelineTryCnt < 40)
+		{
+			let self = this;
+			// 何秒か待つ
+			setTimeout(function(){
+				self.GetMatchDetailTimelineJson();
+			}, 10000);
+
+			self.TimelineTryCnt++;
+		}
+		else
+		{
+			console.log("GetMatchTimelineJson Try Max Failed");
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////
+
+	RemakeGame(Json)
+	{
+		// LCK
+		// Week2 KT vs SKT-T1 Game2 
+		if(Json.gameId === 540885 && Json.platformId === "ESPORTSTMNT06")
+		{
+			// SKT
+			Json.teams[0].bans = [ {championId:96, pickTurn:1}, {championId:15, pickTurn:2}, {championId:3, pickTurn:3}, {championId:40, pickTurn:4}, {championId:98, pickTurn:5} ];
+			// KT
+			Json.teams[1].bans = [ {championId:113, pickTurn:1}, {championId:81, pickTurn:2}, {championId:223, pickTurn:3}, {championId:164, pickTurn:4}, {championId:41, pickTurn:5} ];
 		}
 	}
 }

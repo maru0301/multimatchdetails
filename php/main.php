@@ -42,8 +42,11 @@ class RiotApi
 		$url = "https://acs.leagueoflegends.com/v1/stats/game/" . $gameRealm . "/" . $gameId . "/timeline?gameHash=" . $gameHash;
 
 		$json = file_get_contents($url);
+		$json = json_decode($json, true);
+		$index = array('index' => intval($_GET['index']));
+		$json = array_merge($json, $index);
 		
-		return $json;
+		return json_encode($json);
 	}
 
 	public function GetChampionImage()
@@ -73,6 +76,13 @@ class RiotApi
 		
 		return $json;
 	}
+
+	public function GetVersions()
+	{
+		$json = file_get_contents('../data/json/versions.json');
+		
+		return $json;
+	}
 }
 
 //-------------------------------------------------
@@ -86,6 +96,7 @@ $func_tbl = array(
 			"GetItem" => "GetItem",
 			"GetRealms" => "GetRealms",
 			"GetSpells" => "GetSpells",
+			"GetVersions" => "GetVersions",
 );
 
 //-------------------------------------------------

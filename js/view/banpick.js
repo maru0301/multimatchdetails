@@ -585,12 +585,13 @@ class BanPick
 
 function UpdateBan()
 {
-	view.ShowBan(view.Data.BanPick.Bans);
+//	view.ShowBan(view.Data.BanPick.Bans);
+	banpick.ShowBan(banpick.Data.BanPick.Bans);
 }
 
 function UpdatePick()
 {
-	view.ShowPick(view.Data.BanPick.Picks);
+	banpick.ShowPick(banpick.Data.BanPick.Picks);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

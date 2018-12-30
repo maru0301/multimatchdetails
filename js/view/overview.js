@@ -261,7 +261,11 @@ class OverView
 					let perk = document.createElement("div");
 					perk.className = "perk";
 					if(perkIds[j] !== undefined && perkIds[j] !== 0)
-						perk.innerHTML = `<img src="./data/img/perk/${perkIds[j]}.png">`;
+					{
+						let perk_img = matchdetail.GetPerkImgName(perkIds[j]);
+//						perk.innerHTML = `<img src="./data/img/perk/${perkIds[j]}.png">`;
+						perk.innerHTML = `<img src="./data/img/${perk_img}">`;
+					}
 					
 					perks.appendChild(perk);
 				}

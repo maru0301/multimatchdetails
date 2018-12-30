@@ -3,17 +3,6 @@
 if( !isset( $_GET['func'] ) ) return;
 
 //-------------------------------------------------
-class foo {
-    private $a;
-    public $b = 1;
-    public $c;
-    private $d;
-    static $e;
-   
-    public function test() {
-        var_dump(get_object_vars($this));
-    }
-}
 
 class RiotApi
 {
@@ -24,8 +13,20 @@ class RiotApi
 		$gameHash = $_GET['hash'];
 
 		$url = "https://acs.leagueoflegends.com/v1/stats/game/" . $gameRealm . "/" . $gameId . "?gameHash=" . $gameHash;
-
+/*
 		$json = file_get_contents($url);
+		$json = json_decode($json, true);
+		$index = array('index' => intval($_GET['index']));
+		$json = array_merge($json, $index);
+*/
+
+		$ctx = stream_context_create(array(
+			'http' => array(
+			'method' => 'GET',
+			'header' => 'User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko')
+			)
+		);
+		$json = file_get_contents($url, false, $ctx);
 		$json = json_decode($json, true);
 		$index = array('index' => intval($_GET['index']));
 		$json = array_merge($json, $index);
@@ -41,7 +42,14 @@ class RiotApi
 
 		$url = "https://acs.leagueoflegends.com/v1/stats/game/" . $gameRealm . "/" . $gameId . "/timeline?gameHash=" . $gameHash;
 
-		$json = file_get_contents($url);
+		$ctx = stream_context_create(array(
+			'http' => array(
+			'method' => 'GET',
+			'header' => 'User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko')
+			)
+		);
+		
+		$json = file_get_contents($url, false, $ctx);
 		$json = json_decode($json, true);
 		$index = array('index' => intval($_GET['index']));
 		$json = array_merge($json, $index);
@@ -83,6 +91,13 @@ class RiotApi
 		
 		return $json;
 	}
+
+	public function GetRuneforged()
+	{
+		$json = file_get_contents('../data/json/runesReforged.json');
+		
+		return $json;		
+	}
 }
 
 //-------------------------------------------------
@@ -97,6 +112,7 @@ $func_tbl = array(
 			"GetRealms" => "GetRealms",
 			"GetSpells" => "GetSpells",
 			"GetVersions" => "GetVersions",
+			"GetRuneforged" => "GetRuneforged",
 );
 
 //-------------------------------------------------

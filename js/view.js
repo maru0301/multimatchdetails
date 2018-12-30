@@ -16,6 +16,7 @@ class View {
 	{
 		overview.Init();
 		banpick.Init();
+		timeline.Init();
 	}
 }
 

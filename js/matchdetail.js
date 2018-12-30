@@ -18,6 +18,7 @@ class MatchDetail
 		this.ERROR_ID_MASTERY_IMG_GET_ERROR 	= "マスタリーイメージ情報が取得出来ませんでした";
 		this.ERROR_ID_MATCH_DETAILS_GET_ERROR	= "試合情報が取得出来ませんでした";
 		this.ERROR_ID_MATCH_TIMELINE_GET_ERROR	= "タイムライン情報が取得出来ませんでした";
+		this.ERROR_ID_RUNEFROGED_GET_ERROR	= "ルーンフォージ情報が取得出来ませんでした";
 
 		this.CDN_URL = "http://ddragon.leagueoflegends.com/cdn";
 		this.VERSION = "";
@@ -27,6 +28,7 @@ class MatchDetail
 		this.JSON_DATA_CHAMP_IMG = new Array();
 		this.JSON_DATA_ITEM_IMG = new Array();
 		this.JSON_DATA_SPELLS = new Array();
+		this.JSON_DATA_RUNEFORGED = new Array();
 		
 		this.TEAM_TAG = ["blue", "red"];
 
@@ -214,6 +216,12 @@ class MatchDetail
 		this.MATCHLIST[index].isGetJson = true;
 	}
 
+	ParseMatchDetailTimelineJson(JsonData, index)
+	{
+		this.MATCHLIST[index].timeline = JsonData;
+		this.MATCHLIST[index].isGetTimelineJson = true;
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////
 	// Json
 	////////////////////////////////////////////////////////////////////////////////////
@@ -328,6 +336,7 @@ class MatchDetail
 			{ error_id: this.ERROR_ID_REALM_GET_ERROR,			url: './php/main.php', data: { func:"GetRealms" },  },
 			{ error_id: this.ERROR_ID_SUMMONER_SPELL_GET_ERROR,	url: './php/main.php', data: { func:"GetSpells" },  },
 			{ error_id: this.ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersions" },  },
+			{ error_id: this.ERROR_ID_RUNEFROGED_GET_ERROR,		url: './php/main.php', data: { func:"GetRuneforged" },  },
 		];
 
 		let jqXHRList = [];
@@ -351,17 +360,18 @@ class MatchDetail
 			
 			for(let i = 0, max = arguments.length ; i < max ; ++i)
 			{
-				let result = arguments[i];
+				const result = arguments[i];
 				json.push(result[0]);
 				statuses.push(result[1]);
 				jqXHRResultList.push(result[3]);
 			}
 
-			let championImgJson = json[0];
-			let itemImgJson = json[1];
-			let realmsJson = json[2];
-			let spellsJson = json[3];
-			let versionsJson = json[4];
+			const championImgJson = json[0];
+			const itemImgJson = json[1];
+			const realmsJson = json[2];
+			const spellsJson = json[3];
+			const versionsJson = json[4];
+			const runeforgedJson = json[5];
 
 			// Champion
 			let championImgData = new Array();
@@ -392,6 +402,10 @@ class MatchDetail
 				if(a.key > b.key) return 1;
 				if(a.key == b.key) return 0;
 			});
+
+			// Perk
+			for(let key in runeforgedJson)
+				self.JSON_DATA_RUNEFORGED.push(runeforgedJson[key]);
 
 /*
 			var isSet = false;
@@ -474,8 +488,7 @@ class MatchDetail
 				{
 					if(json[i] !== null)
 					{
-//						self.ParseMatchDetailJson(json[i]);
-						self.MATCHLIST[i].isGetTimelineJson = true;
+						self.ParseMatchDetailTimelineJson(json[i], i);
 					}
 					else
 					{
@@ -505,8 +518,7 @@ class MatchDetail
 					else
 					{
 						// 成功した物は保存
-//						self.ParseMatchDetailJson(jqXHRList[i].responseJSON);
-						self.MATCHLIST[i].isGetTimelineJson = true;
+						self.ParseMatchDetailTimelineJson(jqXHRList[i].responseJSON, i);
 					}
 				}
 
@@ -524,7 +536,7 @@ class MatchDetail
 			.done(function(data)
 			{
 				console.log(data);
-//				self.ParseMatchDetailJson(data);
+				self.ParseMatchDetailTimelineJson(data, 0);
 				view.Init();
 			})
 			.fail(function()
@@ -632,6 +644,22 @@ class MatchDetail
 				}
 			}
 		}
+	}
+
+	GetPerkImgName(PerkId)
+	{
+		for(let i= 0 ; i < this.JSON_DATA_RUNEFORGED.length ; ++i)
+		{
+			for(let j = 0 ; j < this.JSON_DATA_RUNEFORGED[i].slots.length ; ++j)
+			{
+				for(let k = 0 ; k < this.JSON_DATA_RUNEFORGED[i].slots[j].runes.length ; ++k)
+				{
+					if(PerkId == this.JSON_DATA_RUNEFORGED[i].slots[j].runes[k].id)
+						return this.JSON_DATA_RUNEFORGED[i].slots[j].runes[k].icon;
+				}
+			}
+		}
+		return "";
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////

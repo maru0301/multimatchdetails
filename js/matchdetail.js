@@ -331,9 +331,8 @@ class MatchDetail
 		let self = this;
 
 		let request = [
-			{ error_id: this.ERROR_ID_CHAMPION_IMG_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage" },  },
+			{ error_id: this.ERROR_ID_CHAMPION_IMG_GET_ERROR,	url: './php/main.php', data: { func:"GetChampions" },  },
 			{ error_id: this.ERROR_ID_ITEM_IMG_GET_ERROR,		url: './php/main.php', data: { func:"GetItem" },  },
-			{ error_id: this.ERROR_ID_REALM_GET_ERROR,			url: './php/main.php', data: { func:"GetRealms" },  },
 			{ error_id: this.ERROR_ID_SUMMONER_SPELL_GET_ERROR,	url: './php/main.php', data: { func:"GetSpells" },  },
 			{ error_id: this.ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersions" },  },
 			{ error_id: this.ERROR_ID_RUNEFROGED_GET_ERROR,		url: './php/main.php', data: { func:"GetRuneforged" },  },
@@ -368,10 +367,9 @@ class MatchDetail
 
 			const championImgJson = json[0];
 			const itemImgJson = json[1];
-			const realmsJson = json[2];
-			const spellsJson = json[3];
-			const versionsJson = json[4];
-			const runeforgedJson = json[5];
+			const spellsJson = json[2];
+			const versionsJson = json[3];
+			const runeforgedJson = json[4];
 
 			// Champion
 			let championImgData = new Array();
@@ -381,7 +379,7 @@ class MatchDetail
 				self.JSON_DATA_CHAMP_IMG.push(championImgJson.data[key]);
 			
 			// Realms
-			self.VERSION = realmsJson.v;
+			self.VERSION = versionsJson[0];
 
 			// Spells
 			for(let key in spellsJson.data)
@@ -564,7 +562,7 @@ class MatchDetail
 	{
 		for(let i = 0 ; i < this.JSON_DATA_CHAMP_IMG.length ; ++i)
 		{
-			if(id == this.JSON_DATA_CHAMP_IMG[i].id)
+			if(id == this.JSON_DATA_CHAMP_IMG[i].key)
 				return this.JSON_DATA_CHAMP_IMG[i].image.full;
 		}
 	}
@@ -573,7 +571,7 @@ class MatchDetail
 	{
 		for(let i = 0 ; i < this.JSON_DATA_CHAMP_IMG.length ; ++i)
 		{
-			if(id == this.JSON_DATA_CHAMP_IMG[i].id)
+			if(id == this.JSON_DATA_CHAMP_IMG[i].key)
 				return this.JSON_DATA_CHAMP_IMG[i].name;
 		}
 	}
@@ -582,7 +580,7 @@ class MatchDetail
 	{
 		for(let i = 0 ; i < this.JSON_DATA_SPELLS.length ; ++i)
 		{
-			if(id == this.JSON_DATA_SPELLS[i].id)
+			if(id == this.JSON_DATA_SPELLS[i].key)
 			{
 				return this.JSON_DATA_SPELLS[i].image.full;
 			}

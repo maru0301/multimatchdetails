@@ -1,19 +1,19 @@
-var URL_NUM = 0;
+let URL_NUM = 0;
 
 function CreateMatchDetail()
 {
-	var realmList = new Array();
-	var idList = new Array();
-	var hashList = new Array();
+	let realmList = new Array();
+	let idList = new Array();
+	let hashList = new Array();
 	
-	for(var i = 0 ; i < URL_NUM ; ++i)
+	for(let i = 0 ; i < URL_NUM ; ++i)
 	{
 		console.log(i + " : " + $("#url"+i).val());
-		var url = $("#url"+i).val();
+		let url = $("#url"+i).val();
 
 		if(url != undefined && url != "")
 		{
-			var index = url.search("#");
+			let index = url.search("#");
 			url = url.substr(index);
 			index = url.search("/");
 			url = url.substr(index+1);
@@ -22,7 +22,7 @@ function CreateMatchDetail()
 			realmList.push(url.substr(0, index));
 
 			url = url.substr(index+1);
-			var isGameHash = url.search('gameHash') != -1;
+			const isGameHash = url.search('gameHash') != -1;
 
 			if( isGameHash )
 				index = url.search('[\?]');
@@ -56,9 +56,9 @@ function CreateMatchDetail()
 	console.log("idList : " + idList);
 	console.log("hashList : " + hashList);
 
-	var url_data="";
+	let url_data = "";
 
-	for(var i = 0 ; i < realmList.length ; ++i)
+	for(let i = 0 ; i < realmList.length ; ++i)
 	{
 		url_data = url_data + realmList[i] + "," + idList[i] + "," + hashList[i];
 
@@ -73,12 +73,12 @@ function CreateMatchDetail()
 
 function CreateURLForm()
 {
-	var target = document.getElementById("url_list");
-	var newTag;
+	let target = document.getElementById("url_list");
+	let newTag;
 
 	newTag = document.createElement("div");
 
-	var tag = new Array();
+	let tag = new Array();
 
 	tag.push("URL" + (URL_NUM + 1) + " : " + "<input type=\"input\" style=\"width:80%\" id=\"url" + URL_NUM + "\">");
 	newTag.innerHTML = tag.join("");

@@ -222,7 +222,7 @@ class OverView
 			
 			let tag = new Array();
 			let champ_img = matchdetail.GetChampionImgName(Data.player[i].championId);
-			tag.push(`<img src="${matchdetail.CDN_URL}/${matchdetail.VERSION}/img/champion/${champ_img}">`);
+			tag.push(`<img src="${matchdetail.CDN_URL}/${cdnVer}/img/champion/${champ_img}">`);
 			tag.push(`<p>${Data.player[i].stats.champLevel}</p>`);
 			
 			champImg.innerHTML = tag.join("");
@@ -238,7 +238,7 @@ class OverView
 				let spell = document.createElement("div");
 				let spell_img = matchdetail.GetSpellImgName(Data.player[i].spells[j]);
 				spell.className = "spell";
-				spell.innerHTML = `<img src="${matchdetail.CDN_URL}/${matchdetail.VERSION}/img/spell/${spell_img}">`;
+				spell.innerHTML = `<img src="${matchdetail.CDN_URL}/${cdnVer}/img/spell/${spell_img}">`;
 
 				spells.appendChild(spell);
 			}

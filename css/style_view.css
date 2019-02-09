@@ -424,10 +424,22 @@ banpick hr {
 	height : auto;
 }
 
-.overview .perks {
+.overview .perksStatPerks {
 	float: left;
 	width:13%;
 	height:100%;
+}
+
+.overview .perks {
+	float: left;
+	width:100%;
+	height:70%;
+}
+
+.overview .statPerks {
+	float: left;
+	width:100%;
+	height:30%;
 }
 
 .overview .perk {
@@ -436,9 +448,15 @@ banpick hr {
 	height:50%;
 }
 
-.overview .perks img {
+.overview .statPerk {
+	float: left;
+	width:25%;
+	height:100%;
+}
+
+.overview .perksStatPerks img {
 	width:100%;
-	height:80%;
+	height:100%;
 }
 
 .overview .perksPlayerName {

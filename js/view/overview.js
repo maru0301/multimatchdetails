@@ -243,9 +243,14 @@ class OverView
 				spells.appendChild(spell);
 			}
 
-			// Perks
+			// Perks & StatPerks
+			let perks_statPerks = document.createElement("div");
+			perks_statPerks.className = "perksStatPerks";
+
 			let perks = document.createElement("div");
 			perks.className = "perks";
+			let statPerks = document.createElement("div");
+			statPerks.className = "statPerks";
 
 			let isPerks = false;
 
@@ -263,12 +268,28 @@ class OverView
 					if(perkIds[j] !== undefined && perkIds[j] !== 0)
 					{
 						let perk_img = matchdetail.GetPerkImgName(perkIds[j]);
-//						perk.innerHTML = `<img src="./data/img/perk/${perkIds[j]}.png">`;
 						perk.innerHTML = `<img src="./data/img/${perk_img}">`;
 					}
 					
 					perks.appendChild(perk);
 				}
+				perks_statPerks.appendChild(perks);
+
+				let statPerkIds = [
+					Data.player[i].stats.statPerk0, Data.player[i].stats.statPerk1, Data.player[i].stats.statPerk2
+				];
+
+				for(let j = 0 ; j < statPerkIds.length ; ++j)
+				{
+					let statePerk = document.createElement("div");
+					statePerk.className = "statPerk";
+					let statperk_img = matchdetail.GetStatPerkImgName(statPerkIds[j]);
+					statePerk.innerHTML = `<img src="./data/img/${statperk_img}">`;
+					
+					statPerks.appendChild(statePerk);
+				}
+
+				perks_statPerks.appendChild(statPerks);
 
 				isPerks = true;
 			}
@@ -335,7 +356,9 @@ class OverView
 				player.appendChild(spells);
 				
 				if(isPerks)
-					player.appendChild(perks);
+				{
+					player.appendChild(perks_statPerks);
+				}
 				
 				player.appendChild(playerName);
 				player.appendChild(kda);
@@ -355,7 +378,7 @@ class OverView
 				player.appendChild(playerName);
 				
 				if(isPerks)
-					player.appendChild(perks);
+					player.appendChild(perks_statPerks);
 				
 				player.appendChild(spells);
 				player.appendChild(champ);

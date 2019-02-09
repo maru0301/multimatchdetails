@@ -660,6 +660,20 @@ class MatchDetail
 		return "";
 	}
 
+	GetStatPerkImgName(StatPerkId)
+	{
+		let Datas = {
+			"5001" : { "icon" : "/perk-images/StatMods/StatModsHealthScalingIcon.png" },
+			"5002" : { "icon" : "/perk-images/StatMods/StatModsArmorIcon.png" },
+			"5003" : { "icon" : "/perk-images/StatMods/StatModsMagicResIcon.png" },
+			"5005" : { "icon" : "/perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+			"5007" : { "icon" : "/perk-images/StatMods/StatModsCDRScalingIcon.png" },
+			"5008" : { "icon" : "/perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+		};
+
+		return Datas[StatPerkId] ? Datas[StatPerkId].icon : "";
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////
 
 	RetryGetMatchDetailJson()

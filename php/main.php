@@ -20,7 +20,7 @@ class RiotApi
 	{
 		$config = [
 			'version' => 'latest',
-			'region' => '',
+			'region' => 'ap-northeast-1',
 			'credentials' => array(
 				'key'       => '',
 				'secret'    => '',
@@ -85,7 +85,7 @@ class RiotApi
 	public function GetChampions()
 	{
 		$path = self::GetS3Path();
-		$json = file_get_contents($path . '/champions.json');
+		$json = file_get_contents($path . '/championFull.json');
 		
 		return $json;
 	}
@@ -93,7 +93,7 @@ class RiotApi
 	public function GetItem()
 	{
 		$path = self::GetS3Path();
-		$json = file_get_contents($path . '/items.json');
+		$json = file_get_contents($path . '/item.json');
 		
 		return $json;
 	}
@@ -101,7 +101,7 @@ class RiotApi
 	public function GetSpells()
 	{
 		$path = self::GetS3Path();
-		$json = file_get_contents($path . '/summoner-spells.json');
+		$json = file_get_contents($path . '/summoner.json');
 		
 		return $json;
 	}
